@@ -1,10 +1,11 @@
 # Working:
 # U, U', U2, u, u', u2, D, D', D2, d, d', d2, R, R2,R', r, r2, r',
-# L, L2, L', l, l2, l', M, M', F, F2, F', f, f2, f', B, B2, B'
+# L, L2, L', l, l2, l', M, M2, M', F, F2, F', f, f2, f', B, B2, B'
+# Applying the moves randomly
 
 import numpy as np
 import copy
-import os
+import random
 
 
 # Start with the cube in a solved state
@@ -20,8 +21,6 @@ Solved = np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  ']
 
 # Make a copy of the array in a solved state
 SafeSolved = copy.deepcopy(Solved)
-
-
 
 # U Move
 def UTurn(CA):
@@ -430,8 +429,6 @@ def rDashTurn(CA):
 
   x5 = x5[0:6]
 
-  print(x5)
-
   temp2 = np.array(CA[3:6,10])
   temp2 = np.flip(temp2)
 
@@ -650,6 +647,11 @@ def MDash(CA):
   CA = rTurn(CA)
   return CA
 
+
+# M2
+def M2(CA):
+  CA = M(M(CA))
+  return CA
 
 # Front Face
 def FRotate(CA):
@@ -970,6 +972,71 @@ def bDash(CA):
   CA = BDash(CA)
   return CA
 
+
+
+
+
+# Generate how many moves to apply
+def numMoves():
+  N = random.randint(1,21)
+  return N
+
+# Make an empty list N items long to fill with the moves
+MovesToDo = [" "] * numMoves()
+
+# Generate Moves
+def genMoves(CA):  
+  for i in range(len(CA)):
+    CA[i] = random.randint(0,35)
+  return CA
+
+# Convert the numbers generated to the corresponding functions
+def convToMove(CA):
+  for i in range(len(CA)):
+    j = CA[i]
+    CA[i] = MovesList[j]
+    
+  return CA
+
+def convToMoveOutput(CA):
+  for i in range(len(CA)):
+    j = CA[i]
+    CA[i] = MovesListOutput[j]
+    
+  return CA
+
+
+
+# Make a list of the moves to call them easier, separate from the output the user sees
+MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
+             "D2", "d", "dDash", "d2", "R", "R2", "RDash", "r", "r2",
+             "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
+             "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
+             "B", "B2", "BDash"]
+
+
+# Make another list that outputs what the user sees
+MovesListOutput = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
+                   "d", "d'", "d2", "R", "R2", "R'", "r", "r2", "r'",
+                   "L", "L2", "L'", "l", "l2", "l'", "M", "M2", "M'",
+                   "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'"]
+
+# Make a list of turns
+def genList():
+  list1 = convToMove(genMoves(MovesToDo))[0:len(MovesToDo)]
+  return list1
+
+
+# Apply the moves to the cube
+def applyMoves(CA):
+  global Solved
+  function = genList()
+  for i in range(len(MovesToDo)):
+    nextfunction = function[i]
+    SA = eval(nextfunction)
+    Solved = SA(Solved)
+  CA = Solved
+  return CA
 
 
 
