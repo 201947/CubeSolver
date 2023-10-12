@@ -1028,7 +1028,7 @@ def genList():
 
 
 # Apply the moves to the cube
-def applyMoves(CA):
+def scrambleCube(CA):
   global Solved
   function = genList()
   for i in range(len(MovesToDo)):
@@ -1037,6 +1037,87 @@ def applyMoves(CA):
     Solved = SA(Solved)
   CA = Solved
   return CA
+
+
+
+
+# Look at the middle piece on the bottom face
+def bottomCentre(CA):
+  piece = CA[7,4]
+  return piece
+
+# Find the edges of the same colour
+def locateEdges(CA):
+  listEdges = [(),(),(),()]
+  count = 0
+  colour = bottomCentre(CA)
+  for i in range(0,9):
+    for j in range(0,12):
+      count = count+1
+      if CA[i,j][0] == colour[0]:
+        if CA[i,j][1] == "b":
+          print("b",i,j)
+          listEdges[0] = i,j
+        elif CA[i,j][1] == "d":
+          listEdges[1] = i,j
+        elif  CA[i,j][1] == "f":
+          listEdges[2] = i,j
+        elif CA[i,j][1] == "h":
+          listEdges[3] = i,j
+  return listEdges
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1058,6 +1139,34 @@ def check():
       if Solved[i,j] != SafeSolved[i,j]:
         isSolved = False
   print(isSolved)
+
+
+
+# Better check function
+# Check each 3x3 face individually
+
+# top = (0,3,3,6)
+# front = (3,6,3,6)
+# bottom = (6,9,3,6)
+# left = (3,6,0,3)
+# right = (3,6,6,9)
+# back = (3,6,9,12)
+
+def checkFace(num1, num2, num3, num4):
+  isSolved = True
+  global Solved
+  face = Solved[num1:num2, num3:num4]
+  
+  
+  
+  topRight = face[0,0][0]
+  for i in range(0,3):
+    for j in range(0,3):
+      if face[i,j][0] != topRight:
+        isSolved = False
+
+  print(isSolved)
+
 
 
 
