@@ -6,6 +6,7 @@
 import numpy as np
 import copy
 import random
+import itertools
 
 
 # Start with the cube in a solved state
@@ -1035,57 +1036,74 @@ def scrambleCube(CA):
     nextfunction = function[i]
     SA = eval(nextfunction)
     Solved = SA(Solved)
-  CA = Solved
-  return CA
+  return Solved
 
 
 
 
 # Look at the middle piece on the bottom face
 def bottomCentre(CA):
-  piece = CA[7,4]
+  global Solved
+  piece = Solved[7,4]
   return piece
 
 # Find the edges of the same colour
 def locateEdges(CA):
+  global Solved
   listEdges = [(),(),(),()]
-  count = 0
   colour = bottomCentre(CA)
   for i in range(0,9):
     for j in range(0,12):
-      count = count+1
-      if CA[i,j][0] == colour[0]:
-        if CA[i,j][1] == "b":
+      if Solved[i,j][0] == colour[0]:
+        if Solved[i,j][1] == "b":
           print("b",i,j)
           listEdges[0] = i,j
-        elif CA[i,j][1] == "d":
+        elif Solved[i,j][1] == "d":
           listEdges[1] = i,j
-        elif  CA[i,j][1] == "f":
+        elif  Solved[i,j][1] == "f":
           listEdges[2] = i,j
-        elif CA[i,j][1] == "h":
+        elif Solved[i,j][1] == "h":
           listEdges[3] = i,j
   return listEdges
   
 
 
 
+def tempName(CA):
+  global MovesList
+  global Solved
+  colour = bottomCentre(CA)
+  if Solved[6,4][0] != colour[0] and Solved[6,4][1] != "b":
+    for i in range(len(MovesToDo)):
+      nextfunction = function[i]
+      SA = eval(nextfunction)
+      Solved = SA(Solved)
+  
+  
+  return Solved
 
 
+# Recursive approach
+def bottomEdges(CA, num1):
+  global Solved
+  global MovesList
+  colour = bottomCentre(Solved)
+  
+  while Solved[6,4][0] != colour[0] and Solved[6,4][1] != "b":
+    x = num1
+    while x < 6:
+      for i in range(x):
+        pool=[MovesList]*(i+1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        for n in itertools.product(*pool):
+          function = []*(x**x)
+          for j in range(len(function)):
+            function[j] = n
+            print(i,j)
+      x = x + 1
+      print(x)
+  return CA
+      
 
 
 
@@ -1145,26 +1163,28 @@ def check():
 # Better check function
 # Check each 3x3 face individually
 
-# top = (0,3,3,6)
-# front = (3,6,3,6)
-# bottom = (6,9,3,6)
-# left = (3,6,0,3)
-# right = (3,6,6,9)
-# back = (3,6,9,12)
+top = (0,3,3,6)
+front = (3,6,3,6)
+bottom = (6,9,3,6)
+left = (3,6,0,3)
+right = (3,6,6,9)
+back = (3,6,9,12)
 
-def checkFace(num1, num2, num3, num4):
+def checkFace(CF):
   isSolved = True
   global Solved
+  
+  num1 = CF[0]
+  num2 = CF[1]
+  num3 = CF[2]
+  num4 = CF[3]  
+  
   face = Solved[num1:num2, num3:num4]
-  
-  
-  
-  topRight = face[0,0][0]
+  middlePiece = face[1,1][0]
   for i in range(0,3):
     for j in range(0,3):
-      if face[i,j][0] != topRight:
+      if face[i,j][0] != middlePiece:
         isSolved = False
-
   print(isSolved)
 
 
