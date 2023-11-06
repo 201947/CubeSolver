@@ -1088,24 +1088,45 @@ def bottomEdges(CA, num1):
   global Solved
   global MovesList
   colour = bottomCentre(Solved)
+  moveCount = 0
   
-  while Solved[6,4][0] != colour[0] and Solved[6,4][1] != "b":
+  while CA[6,4][0] != colour[0] or CA[6,4][1] != "b":
     x = num1
     while x < 6:
       for i in range(x):
         pool=[MovesList]*(i+1)
 
         for n in itertools.product(*pool):
-          function = []*(x**x)
+          function = []
+          for a in range(x):
+            function.append([])
           for j in range(len(function)):
             function[j] = n
-            print(i,j)
+            print(n)
+            for move in n:
+              print(move)
+              t = eval(move)
+              CA = t(CA)
+              print("eval:",t)
+              moveCount = moveCount + 1
+              if CA[6,4][0] == colour[0] and CA[6,4][1] == "b":
+                print("solved")
+                print(moveCount)
+                return CA
+        CA = Solved
+        print("restored")
       x = x + 1
       print(x)
   return CA
       
 
 
+# New function: checkEdges(which face to check)
+# In bottomEdges:
+#   while checkEdges == False:
+#     run loop
+#     if checkEdges == True:
+#        return array
 
 
 
@@ -1186,7 +1207,6 @@ def checkFace(CF):
       if face[i,j][0] != middlePiece:
         isSolved = False
   print(isSolved)
-
 
 
 
