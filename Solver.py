@@ -2,6 +2,7 @@
 # U, U', U2, u, u', u2, D, D', D2, d, d', d2, R, R2,R', r, r2, r',
 # L, L2, L', l, l2, l', M, M2, M', F, F2, F', f, f2, f', B, B2, B'
 # Applying the moves randomly
+# Brute force to get top edge piece on bottom face positioned correctly
 
 import numpy as np
 import copy
@@ -1002,7 +1003,7 @@ def convToMove(CA):
 def convToMoveOutput(CA):
   for i in range(len(CA)):
     j = CA[i]
-    CA[i] = MovesListOutput[j]
+    CA[i] = MovesListForUser[j]
     
   return CA
 
@@ -1017,7 +1018,7 @@ MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
 
 
 # Make another list that outputs what the user sees
-MovesListOutput = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
+MovesListForUser = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
                    "d", "d'", "d2", "R", "R2", "R'", "r", "r2", "r'",
                    "L", "L2", "L'", "l", "l2", "l'", "M", "M2", "M'",
                    "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'"]
@@ -1029,7 +1030,7 @@ def genList():
 
 
 # Apply the moves to the cube
-def scrambleCube(CA):
+def scrambleCube():
   global Solved
   function = genList()
   for i in range(len(MovesToDo)):
@@ -1043,8 +1044,7 @@ def scrambleCube(CA):
 
 # Look at the middle piece on the bottom face
 def bottomCentre(CA):
-  global Solved
-  piece = Solved[7,4]
+  piece = CA[7,4]
   return piece
 
 # Find the edges of the same colour
@@ -1083,16 +1083,18 @@ def tempName(CA):
   return Solved
 
 
+
+
 # Recursive approach
-def bottomEdges(CA, num1):
+def bottomEdges(CA):
   global Solved
   global MovesList
   colour = bottomCentre(Solved)
   moveCount = 0
   
-  while CA[6,4][0] != colour[0] or CA[6,4][1] != "b":
-    x = num1
-    while x < 6:
+  while checkEdges(CA) == False:
+    x = 0
+    while x < 10:
       for i in range(x):
         pool=[MovesList]*(i+1)
 
@@ -1102,36 +1104,50 @@ def bottomEdges(CA, num1):
             function.append([])
           for j in range(len(function)):
             function[j] = n
-            print(n)
             for move in n:
-              print(move)
               t = eval(move)
               CA = t(CA)
-              print("eval:",t)
               moveCount = moveCount + 1
-              if CA[6,4][0] == colour[0] and CA[6,4][1] == "b":
+              if checkEdges(CA) == True:
                 print("solved")
                 print(moveCount)
                 return CA
         CA = Solved
-        print("restored")
       x = x + 1
-      print(x)
+      print (x)
   return CA
       
 
-
-# New function: checkEdges(which face to check)
-# In bottomEdges:
-#   while checkEdges == False:
-#     run loop
-#     if checkEdges == True:
-#        return array
-
-
+  
+def checkEdges(CA):
+  colour = bottomCentre(Solved)
+  if CA[6,4][0] == colour[0] and CA[6,4][1] == "b" and CA[8,4][0] == colour[0] and CA[8,4][1] == "h" and CA[7,3][0] == colour[0] and CA[7,3][1] == "d" and CA[7,5][0] == colour[0] and CA[7,5][1] == "f":
+    return True
+  else:
+    return False
 
 
 
+# Check for corner and corresponding edge piece locations
+def findCorners(CA):
+  colour = bottomCentre(CA)
+  cornerPositions = [(""),(""),(""),("")]
+  for i in range(0,9):
+    for j in range(0,12):
+      if CA[i,j][0] == colour[0] and CA[i,j][1] == "a":
+        cornerPositions[0] = i,j
+      elif CA[i,j][0] == colour[0] and CA[i,j][1] == "c":
+        cornerPositions[1] = i,j
+      elif  CA[i,j][0] == colour[0] and CA[i,j][1] == "g":
+        cornerPositions[2] = i,j
+      elif CA[i,j][0] == colour[0] and CA[i,j][1] == "i":
+        cornerPositions[3] = i,j
+  return cornerPositions
+
+# Locate the edge pieces that correspond with the
+# corners found with findCorners
+def findEdges(CA):
+  
 
 
 
@@ -1152,7 +1168,31 @@ def bottomEdges(CA, num1):
 
 
 
+def bruteForce(CA):
+  global Solved
+  global MovesList
+  moveCount = 0
+  while check() == False:
+    x = 0
+    while x < 20:
+      for i in range(x):
+        pool=[MovesList]*(i+1)
 
+        for n in itertools.product(*pool):
+          function = []
+          for a in range(x):
+            function.append([])
+          for j in range(len(function)):
+            function[j] = n
+            for move in n:
+              t = eval(move)
+              CA = t(CA)
+              moveCount = moveCount + 1
+              if check() == True:
+                return CA
+              CA = Solved
+      x = x + 1
+  return CA
 
 
 
@@ -1177,7 +1217,7 @@ def check():
     for j in range(0,12):
       if Solved[i,j] != SafeSolved[i,j]:
         isSolved = False
-  print(isSolved)
+  return isSolved
 
 
 
