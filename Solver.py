@@ -1,8 +1,13 @@
 # Working:
 # U, U', U2, u, u', u2, D, D', D2, d, d', d2, R, R2,R', r, r2, r',
-# L, L2, L', l, l2, l', M, M2, M', F, F2, F', f, f2, f', B, B2, B'
+# L, L2, L', l, l2, l', M, M2, M', F, F2, F', f, f2, f', B, B2, B',
+# E, E', E2, S, S', S2
 # Applying the moves randomly
-# Brute force to get top edge piece on bottom face positioned correctly
+# Brute force solve bottom cross
+# Brute force to solve bottom corners without keeping edges
+# Brute force to solve the entire bottom face (THEORETICALLY)
+# Brute force to solve the entire cube (THEORETICALLY)
+
 
 import numpy as np
 import copy
@@ -975,12 +980,41 @@ def bDash(CA):
   return CA
 
 
+# E functions
+def E(CA):
+  RA=np.roll(CA[4],3)
+  CA[4] = RA
+  return CA
+
+def EDash(CA):
+  RA=np.roll(CA[4],-3)
+  CA[4] = RA
+  return CA
+
+def E2(CA):
+  CA = E(E(CA))
+  return CA
+
+
+
+# S functions
+def S(CA):
+  CA = fTurn(CA)
+  return CA
+
+def SDash(CA):
+  CA = fDashTurn(CA)
+  return CA
+
+def S2(CA):
+  CA = S(S(CA))
+  return CA
 
 
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(1,21)
+  N = random.randint(1,5)
   return N
 
 # Make an empty list N items long to fill with the moves
@@ -1014,14 +1048,17 @@ MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
              "D2", "d", "dDash", "d2", "R", "R2", "RDash", "r", "r2",
              "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
              "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
-             "B", "B2", "BDash"]
+             "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2"]
 
 
 # Make another list that outputs what the user sees
 MovesListForUser = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
                    "d", "d'", "d2", "R", "R2", "R'", "r", "r2", "r'",
                    "L", "L2", "L'", "l", "l2", "l'", "M", "M2", "M'",
-                   "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'"]
+                   "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'",
+                   "E", "E'", "E2", "S", "S'", "S2"]
+
+
 
 # Make a list of turns
 def genList():
@@ -1030,15 +1067,13 @@ def genList():
 
 
 # Apply the moves to the cube
-def scrambleCube():
-  global Solved
+def scrambleCube(CA):
   function = genList()
   for i in range(len(MovesToDo)):
     nextfunction = function[i]
     SA = eval(nextfunction)
-    Solved = SA(Solved)
-  return Solved
-
+    CA = SA(CA)
+  return CA
 
 
 
@@ -1109,12 +1144,11 @@ def bottomEdges(CA):
               CA = t(CA)
               moveCount = moveCount + 1
               if checkEdges(CA) == True:
-                print("solved")
-                print(moveCount)
+                print("Combinations attempted:",moveCount)
+                print("Successful combination:",function[0])
                 return CA
-        CA = Solved
+            CA = Solved
       x = x + 1
-      print (x)
   return CA
       
 
@@ -1125,6 +1159,35 @@ def checkEdges(CA):
     return True
   else:
     return False
+
+
+# Brute force corners into position
+def corners(CA):
+  colour = bottomCentre(CA)
+  moveCount = 0
+  while checkCorners(CA) == False:
+    x = 0
+    while x < 10:
+      for i in range(x):
+        pool=[MovesList]*(i+1)
+
+        for n in itertools.product(*pool):
+          function = []
+          for a in range(x):
+            function.append([])
+          for j in range(len(function)):
+            function[j] = n
+            for move in n:
+              t = eval(move)
+              CA = t(CA)
+              moveCount = moveCount + 1
+              if checkCorners(CA) == True:
+                print("Combinations attempted:",moveCount)
+                print("Successful combination:",function[0])
+                return CA
+          CA = Solved
+      x = x + 1
+  return CA
 
 
 
@@ -1144,13 +1207,51 @@ def findCorners(CA):
         cornerPositions[3] = i,j
   return cornerPositions
 
-# Locate the edge pieces that correspond with the
-# corners found with findCorners
+
+def checkCorners(CA):
+  colour = bottomCentre(CA)
+  if CA[6,3][0] == colour[0] and CA[6,3][1] == "a" and CA[6,5][0] == colour[0] and CA[6,5][1] == "c" and CA[8,3][0] == colour[0] and CA[8,3][1] == "g" and CA[8,5][0] == colour[0] and CA[8,5][1] == "i":
+    return True
+  else:
+    return False
+
+
+
+# Locate the edge pieces that correspond with the corners found with findCorners
 def findEdges(CA):
-  
+  corners = findCorners(CA)
+  return corners
 
 
 
+# Solve the edges and corners of the bottom face using brute force
+def bottomFace(CA):
+  moveCount = 0
+  global MovesList
+  while checkCorners(CA) == False or checkEdges(CA) == False:
+    x = 0
+    if x < 10:
+      for i in range(x):
+        pool=[MovesList]*(i+1)
+
+        for n in itertools.product(*pool):
+          function = []
+          for a in range(x):
+            function.append([])
+          for j in range(len(function)):
+            function[j] = n
+            for move in n:
+              t = eval(move)
+              CA = t(CA)
+              moveCount = moveCount + 1
+              print(moveCount)
+              if checkCorners(CA) == True and checkEdges(CA) == True:
+                print("Bottom face solving sequence:",function[0])
+                print(moveCount,"combinations attempted")
+                return CA
+          CA = Solved
+      x = x + 1
+  return CA
 
 
 
@@ -1199,25 +1300,28 @@ def bruteForce(CA):
 
 
 
-
 # Restore Solved State
 def restore():
   global Solved
-  Solved = SafeSolved
+  global SafeSolved
+  Solved = copy.deepcopy(SafeSolved)
+
+
 
 # Output the Current State of 'Solved'
 def solved():
+  global Solved
   print(Solved)
+
 
 
 # Check if Solved is the same as SafeSolved
 def check():
-  isSolved = True
-  for i in range(0,9):
-    for j in range(0,12):
-      if Solved[i,j] != SafeSolved[i,j]:
-        isSolved = False
-  return isSolved
+  global Solved
+  global SafeSolved
+  return np.array_equal(Solved,SafeSolved)
+# Only works first few runs, compares correctly,
+# but SafeSolved is changed at some point, don't know where/what conditions
 
 
 
@@ -1232,7 +1336,6 @@ right = (3,6,6,9)
 back = (3,6,9,12)
 
 def checkFace(CF):
-  isSolved = True
   global Solved
   
   num1 = CF[0]
@@ -1245,8 +1348,8 @@ def checkFace(CF):
   for i in range(0,3):
     for j in range(0,3):
       if face[i,j][0] != middlePiece:
-        isSolved = False
-  print(isSolved)
+        return False
+  return True
 
 
 
