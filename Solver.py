@@ -1010,10 +1010,50 @@ def S2(CA):
   return CA
 
 
+# Whole cube rotations
+def x(CA):
+  CA = r(LDash(CA))
+  return CA
+
+def xDash(CA):
+  CA = rDash(L(CA))
+  return CA
+
+def x2(CA):
+  CA = x(x(CA))
+  return CA
+
+
+def y(CA):
+  CA = u(DDash(CA))
+  return CA
+
+def yDash(CA):
+  CA = uDash(D(CA))
+  return CA
+
+def y2(CA):
+  CA = y(y(CA))
+  return CA
+
+
+def z(CA):
+  CA = f(BDash(CA))
+  return CA
+
+def zDash(CA):
+  CA = fDash(B(CA))
+  return CA
+
+def z2(CA):
+  CA = z(z(CA))
+  return CA
+
+
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(1,3)
+  N = random.randint(1,5)
   return N
 
 # Make an empty list N items long to fill with the moves
@@ -1022,7 +1062,7 @@ MovesToDo = [" "] * numMoves()
 # Generate Moves
 def genMoves(CA):  
   for i in range(len(CA)):
-    CA[i] = random.randint(0,41)
+    CA[i] = random.randint(0,51)
   return CA
 
 # Convert the numbers generated to the corresponding functions
@@ -1047,15 +1087,17 @@ MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
              "D2", "d", "dDash", "d2", "R", "R2", "RDash", "r", "r2",
              "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
              "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
-             "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2"]
+             "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2",
+             "x", "x2", "xDash", "y", "y2", "yDash", "z", "z2", "zDash"]
 
 
 # Make another list that outputs what the user sees
 MovesListForUser = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
-                   "d", "d'", "d2", "R", "R2", "R'", "r", "r2", "r'",
-                   "L", "L2", "L'", "l", "l2", "l'", "M", "M2", "M'",
-                   "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'",
-                   "E", "E'", "E2", "S", "S'", "S2"]
+                    "d", "d'", "d2", "R", "R2", "R'", "r", "r2", "r'",
+                    "L", "L2", "L'", "l", "l2", "l'", "M", "M2", "M'",
+                    "F", "F2", "F'", "f", "f2", "f'", "B", "B2", "B'",
+                    "E", "E'", "E2", "S", "S'", "S2", "x", "x2", "x'",
+                    "y", "y2", "y'", "z", "z2", "z'"]
 
 
 
@@ -1068,11 +1110,13 @@ def genList():
 # Apply the moves to the cube
 def scrambleCube(CA):
   function = genList()
+  print(function)
   for i in range(len(MovesToDo)):
     nextfunction = function[i]
     SA = eval(nextfunction)
     CA = SA(CA)
   return CA
+
 
 
 # Apply a pre-set scramble for testing purposes
@@ -1115,9 +1159,9 @@ def locateEdges(CA):
 def bottomEdges(CA):
   Stashed = copy.deepcopy(CA)
   while checkEdges(CA) == False:
-    x = 0
-    while x < 10:
-      for n in range(x):
+    k = 0
+    while k < 10:
+      for n in range(k):
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
@@ -1129,7 +1173,7 @@ def bottomEdges(CA):
               print(list1)
               return CA
             CA = copy.deepcopy(Stashed)
-      x = x + 1
+      k = k + 1
   return CA
 
 
@@ -1147,14 +1191,14 @@ def corners(CA):
   Stashed = copy.deepcopy(CA)
   moveCount = 0
   while checkCorners(CA) == False:
-    x = 0
-    while x < 10:
-      for i in range(x):
+    k = 0
+    while k < 10:
+      for i in range(k):
         pool=[MovesList]*(i+1)
 
         for n in itertools.product(*pool):
           function = []
-          for a in range(x):
+          for a in range(k):
             function.append([])
             function[0] = n
             for move in n:
@@ -1164,7 +1208,7 @@ def corners(CA):
               if checkCorners(CA) == True:
                 return CA
           CA = copy.deepcopy(Stashed)
-      x = x + 1
+      k = k + 1
   return CA
 
 
@@ -1207,14 +1251,14 @@ def bottomFace(CA):
   Stashed = copy.deepcopy(CA)
   moveCount = 0
   while checkCorners(CA) == False or checkEdges(CA) == False:
-    x = 0
-    while x < 10:
-      for i in range(x):
+    k = 0
+    while k < 10:
+      for i in range(k):
         pool=[MovesList]*(i+1)
 
         for n in itertools.product(*pool):
           function = []
-          for a in range(x):
+          for a in range(k):
             function.append([])
             function[0] = n
             for move in n:
@@ -1225,11 +1269,36 @@ def bottomFace(CA):
                 print("Solving combination:",n)
                 return CA
           CA = copy.deepcopy(Stashed)
-      x = x + 1
+      k = k + 1
   return CA
 
 
+# Do each corner of F2L independently
 
+def BruteF2L(CA):
+  Stashed = copy.deepcopy(CA)
+  moveCount = 0
+  while F2LCheck(F2LFaceList,CA) == False or checkCorners(CA) == False or checkEdges(CA) == False:
+    k = 0
+    while k < 10:
+      for i in range(k):
+        pool=[MovesList]*(i+1)
+
+        for n in itertools.product(*pool):
+          function = []
+          for a in range(k):
+            function.append([])
+            function[0] = n
+            for move in n:
+              t = eval(move)
+              CA = t(CA)
+              moveCount = moveCount + 1
+              if F2LCheck(F2LFaceList,CA) == True and checkCorners(CA) == True and checkEdges(CA) == True:
+                print("Solving combination:",n)
+                return CA
+          CA = copy.deepcopy(Stashed)
+      k = k + 1
+  return CA
 
 
 
@@ -1252,9 +1321,9 @@ def bruteForce(CA):
   global MovesList
   moveCount = 0
   if checkColour(faceList,CA) == False:
-    x = 0
-    while x < 6:
-      for n in range(1,x):
+    k = 0
+    while k < 6:
+      for n in range(1,k):
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
@@ -1265,7 +1334,7 @@ def bruteForce(CA):
               print("Solving combination",combination)
               return CA
             CA = copy.deepcopy(Stashed)
-      x = x + 1
+      k = k + 1
   return CA
 
 
@@ -1308,6 +1377,7 @@ right = (3,6,6,9)
 back = (3,6,9,12)
 
 faceList = [top,front,bottom,left,right,back]
+F2LFaceList = [front,left,right,back]
 
 def checkFace(CF):
   global Solved
@@ -1339,6 +1409,21 @@ def checkColour(CF,CA):
       for k in range(3):
         if face[j,k][0] != middlePiece:
           return False
+  return True
+
+
+
+def F2LCheck(CF,CA):
+  for i in range(len(CF)):
+    num1 = CF[i][0]
+    num2 = CF[i][1]
+    num3 = CF[i][2]
+    num4 = CF[i][3]
+    face = CA[num1:num2,num3:num4]
+    middlePiece = face[1,1][0]
+    for i in range(1,3):
+      if face[i,2][0] != middlePiece:
+        return False
   return True
 
 
