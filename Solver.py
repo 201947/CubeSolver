@@ -13,6 +13,7 @@ import numpy as np
 import copy
 import random
 import itertools
+import time
 
 
 # Start with the cube in a solved state
@@ -27,282 +28,230 @@ Solved = np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  ']
                    ['  ','  ','  ','Gg','Gh','Gi','  ','  ','  ','  ','  ','  ']])
 
 # Make a copy of the array in a solved state
-SafeSolved = copy.deepcopy(Solved)
+CurrentCube = copy.deepcopy(Solved)
+
+
 
 # U Move
-def UTurn(CA):
-
-  RA = np.roll(CA[3], -3)
-  return RA
+def UTurn():
+  CurrentCube[3] = np.roll(CurrentCube[3], -3)
+  return
 
 # Rotate Top Face
-def URotateTop(RT):
+def URotateTop():
   tempArr=[]
   for i in range(0,3):
-    tempArr.append(RT[i,3:6])
+    tempArr.append(CurrentCube[i,3:6])
   arr = [item for arr in tempArr for item in arr]
   arr = np.array(arr)
-  reshapedArr = arr.reshape(3,3)
-  rotatedArr = np.rot90(np.rot90(np.rot90(reshapedArr)))
-  return rotatedArr
+  face = arr.reshape(3,3)
+  rotated = np.rot90(np.rot90(np.rot90(face)))
+  for i in range(3):
+    for j in range(3):
+      CurrentCube[i,j+3] = rotated[i,j]
+  return
 
 # Combine UTurn and RotateTop into 1 function
-def U(CA):
-  UT = UTurn(CA)
-  CA[3] = UT
-  
-  Rotated = URotateTop(CA)
+def U():
+  UTurn()
+  URotateTop()
+  return
 
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i,j+3] = Rotated[i,j]
-  
-  return CA
 
 
 # U2
-def U2(CA):
-  TA = U(U(CA))
-  return TA
+def U2():
+  U()
+  U()
+  return
 
 
 # U'
-def UDashTurn(CA):
-  RA = np.roll(CA[3],3)
-  return RA
+def UDashTurn():
+  CurrentCube[3] = np.roll(CurrentCube[3],3)
+  return CurrentCube
 
-def UDashRotateTop(RT):
+
+def UDashRotateTop():
   tempArr=[]
   for i in range(0,3):
-    tempArr.append(RT[i,3:6])
+    tempArr.append(CurrentCube[i,3:6])
   arr = [item for arr in tempArr for item in arr]
   arr = np.array(arr)
-  reshapedArr = arr.reshape(3,3)
-  rotatedArr = np.rot90(reshapedArr)
-  return rotatedArr
+  face = arr.reshape(3,3)
+  rotated = np.rot90(face)
+  for i in range(3):
+    for j in range(3):
+      CurrentCube[i,j+3] = rotated[i,j]
+  return
 
-def UDash(CA):
-  UT=UDashTurn(CA)
-  CA[3]=UT
 
-  Rotated = UDashRotateTop(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i,j+3] = Rotated[i,j]
-  UT = CA
-
-  return UT
+def UDash():
+  UDashTurn()
+  UDashRotateTop()
+  return
 
 
 # u
-def uTurn(CA):
-  RA=np.roll(CA[3],-3)
-  CA[3] = RA
-  RA=np.roll(CA[4],-3)
-  CA[4] = RA
-  return CA
+def uTurn():
+  CurrentCube[3]=np.roll(CurrentCube[3],-3)
+  CurrentCube[4]=np.roll(CurrentCube[4],-3)
+  return
 
-def u(CA):
-  UT = uTurn(CA)
-
-  Rotated = URotateTop(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i,j+3] = Rotated[i,j]
-  UT = CA
-
-  return CA
+def u():
+  uTurn()
+  URotateTop()
+  return
 
 
 # u'
-def uDashTurn(CA):
-  RA=np.roll(CA[3],3)
-  CA[3] = RA
-  RA=np.roll(CA[4],3)
-  CA[4] = RA
-  return CA
+def uDashTurn():
+  CurrentCube[3]=np.roll(CurrentCube[3],3)
+  CurrentCube[4]=np.roll(CurrentCube[4],3)
+  return
 
-def uDash(CA):
-  UT = uDashTurn(CA)
-
-  Rotated = UDashRotateTop(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i,j+3] = Rotated[i,j]
-  UT = CA
-
-  return UT
+def uDash():
+  uDashTurn()
+  UDashRotateTop()
+  return
 
 
 # u2
-def u2(CA):
-  UT = u(u(CA))
-  return UT
-
-
+def u2():
+  u()
+  u()
+  return
 
 
 # D
-def DTurn(CA):
-  RA = np.roll(CA[5],3)
-  return RA
+def DTurn():
+  CurrentCube[5] = np.roll(CurrentCube[5],3)
+  return
 
 # Rotate the bottom face
-def DBottom(CA):
+def DBottom():
   tempArr=[]
   for i in range(6,9):
-    tempArr.append(CA[i,3:6])
+    tempArr.append(CurrentCube[i,3:6])
   arr = [item for arr in tempArr for item in arr]
   arr = np.array(arr)
-  reshapedArr = arr.reshape(3,3)
-  rotatedArr = np.rot90(reshapedArr)
-  return rotatedArr
+  face = arr.reshape(3,3)
+  rotated = np.rot90(face)
+  for i in range(3):
+    for j in range(3):
+      CurrentCube[i+6,j+3] = rotated[i,j]
+  return
 
 # Combine DTurn and DBottom into one function
-def D(CA):
-  DT=DTurn(CA)
-  CA[5]=DT
-
-  Rotated = DDashBottom(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i+6,j+3] = Rotated[i,j]
-  UT = CA
-
-  return CA  
+def D():
+  DTurn()
+  DBottom()
+  return
 
 
 # D2
-def D2(CA):
-  D2A = D(CA)
-  DA2 = D(D2A)
-  return DA2
+def D2():
+  D()
+  D()
+  return
 
 
 # D' Turn
-def DDashTurn(CA):
-  RA = np.roll(CA[5],-3)
-  return RA
+def DDashTurn():
+  CurrentCube[5] = np.roll(CurrentCube[5],-3)
+  return
 
 # D' Bottom face rotation
-def DDashBottom(CA):
+def DDashBottom():
   tempArr=[]
   for i in range(6,9):
-    tempArr.append(CA[i,3:6])
+    tempArr.append(CurrentCube[i,3:6])
   arr = [item for arr in tempArr for item in arr]
   arr = np.array(arr)
-  reshapedArr = arr.reshape(3,3)
-  rotatedArr = np.rot90(np.rot90(np.rot90(reshapedArr)))
-  return rotatedArr
+  face = arr.reshape(3,3)
+  rotated = np.rot90(np.rot90(np.rot90(face)))
+  for i in range(3):
+    for j in range(3):
+      CurrentCube[i+6,j+3] = rotated[i,j]
+  return
 
 # D'
-def DDash(CA):
-  DDA = DDashTurn(CA)
-  CA[5] = DDA
-
-  Rotated = DBottom(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i+6,j+3] = Rotated[i,j]
-  UT = CA
-
-  return UT
+def DDash():
+  DDashTurn()
+  DDashBottom()
+  return
 
 
 # d Turn
-def dDashTurn(CA):
-  RA=np.roll(CA[4],-3)
-  CA[4] = RA
-  RA=np.roll(CA[5],-3)
-  CA[5] = RA
-  return CA
+def dDashTurn():
+  CurrentCube[4]=np.roll(CurrentCube[4],-3)
+  CurrentCube[5]=np.roll(CurrentCube[5][5],-3)
+  return
 
 # d
-def d(CA):
-  dA = dTurn(CA)
-
-  Rotated = DDashBottom(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i+6,j+3] = Rotated[i,j]
-  UT = CA
-
-  return UT
+def d():
+  dTurn()
+  DBottom()
+  return
 
 
 # d2
-def d2(CA):
-  d2A = d(CA)
-  dA2 = d(d2A)
-  return dA2
+def d2():
+  d()
+  d()
+  return
 
 
 # d' Turn
-def dTurn(CA):
-  RA=np.roll(CA[4],3)
-  CA[4] = RA
-  RA=np.roll(CA[5],3)
-  CA[5] = RA
-  return CA
+def dTurn():
+  CurrentCube[4]=np.roll(CurrentCube[4],3)
+  CurrentCube[5]=np.roll(CurrentCube[5],3)
+  return
 
 
 # d'
-def dDash(CA):
-  dDA = dDashTurn(CA)
-  CA = dDA
-
-  Rotated = DBottom(CA)
-
-  for i in range(0,3):
-    for j in range(0,3):
-      CA[i+6,j+3] = Rotated[i,j]
-  UT = CA
-
-  return UT
+def dDash():
+  dDashTurn()
+  DDashBottom()
+  return
 
 
 
 # Turn the pieces connected to the R face
-def RTurn(CA):
+def RTurn():
   x5 = []
   
   for i in range(0,9):
-    x5.append(CA[i,5])
+    x5.append(CurrentCube[i,5])
   
   x5 = np.roll(x5,-3)
   
   for i in range(0,6):
-    CA[i,5] = x5[i]
+    CurrentCube[i,5] = x5[i]
   
   x5 = np.flip(x5)
   
   tempList = []
   for i in range(0,3):
-    tempList.append(CA[i+3,9])
+    tempList.append(CurrentCube[i+3,9])
   
   tempList2 = np.flip(tempList)
   
   for i in range(0,3):
-    CA[i+6,5] = tempList2[i]
+    CurrentCube[i+6,5] = tempList2[i]
   
   for i in range(0,3):
-    CA[i+3,9] = x5[i]
+    CurrentCube[i+3,9] = x5[i]
   
-  return CA
+  return
 
 # Rotate the R face
-def RRotate(CA):
+def RRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(6,9):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -312,28 +261,27 @@ def RRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+6] = temp2[i,j]
+      CurrentCube[i+3,j+6] = temp2[i,j]
   
-  return CA
+  return
 
 # Combine RTurn and RRotate into R
-def R(CA):
-  CA = RTurn(CA)
-  CA = RRotate(CA)
-
-  return CA
+def R():
+  RTurn()
+  RRotate()
+  return
 
 
 # R2
-def R2(CA):
-  CA = R(CA)
-  CA = R(CA)
-  return CA
+def R2():
+  R()
+  R()
+  return
 
 
 # R'
-def RDashTurn(CA):
-  x5 = np.array(CA[0:9,5])
+def RDashTurn():
+  x5 = np.array(CurrentCube[0:9,5])
 
   temp = x5[6:9]
   temp = np.array(temp)
@@ -342,27 +290,27 @@ def RDashTurn(CA):
   x5 = x5[0:6]
 
   for i in range(0,6):
-    CA[i+3:i+9,5] = x5[i]
+    CurrentCube[i+3:i+9,5] = x5[i]
 
-  temp2 = np.array(CA[3:6,9])
+  temp2 = np.array(CurrentCube[3:6,9])
   temp2 = np.flip(temp2)
 
   for i in range(0,3):
-    CA[i,5] = temp2[i]
+    CurrentCube[i,5] = temp2[i]
 
   for i in range(0,3):
-    CA[i+3,9] = temp[i]
+    CurrentCube[i+3,9] = temp[i]
 
-  return(CA)
+  return
 
 
 # R' Face Rotation
-def RDashRotate(CA):
+def RDashRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(6,9):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -372,62 +320,62 @@ def RDashRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+6] = temp2[i,j]
+      CurrentCube[i+3,j+6] = temp2[i,j]
 
-  return(CA)
+  return
 
 
 # R'
-def RDash(CA):
-  CA = RDashTurn(CA)
-  CA = RDashRotate(CA)
-  return CA
+def RDash():
+  RDashTurn()
+  RDashRotate()
+  return
 
 
 
 # rTurn
-def rTurn(CA):
+def rTurn():
   x5 = []
   
   for i in range(0,9):
-    x5.append(CA[i,4])
+    x5.append(CurrentCube[i,4])
   
   x5 = np.roll(x5,-3)
   
   for i in range(0,6):
-    CA[i,4] = x5[i]
+    CurrentCube[i,4] = x5[i]
   
   x5 = np.flip(x5)
   
   tempList = []
   for i in range(0,3):
-    tempList.append(CA[i+3,10])
+    tempList.append(CurrentCube[i+3,10])
   
   tempList2 = np.flip(tempList)
   
   for i in range(0,3):
-    CA[i+6,4] = tempList2[i]
+    CurrentCube[i+6,4] = tempList2[i]
   
   for i in range(0,3):
-    CA[i+3,10] = x5[i]
+    CurrentCube[i+3,10] = x5[i]
   
-  return CA
+  return
 
 # r
-def r(CA):
-  CA = rTurn(CA)
-  CA = RTurn(CA)
-  CA = RRotate(CA)
-  return CA
+def r():
+  rTurn()
+  R()
+  return
 
 # r2
-def r2(CA):
-  CA = r(r(CA))
-  return CA
+def r2():
+  r()
+  r()
+  return
 
 # r' Turn
-def rDashTurn(CA):
-  x5 = np.array(CA[0:9,4])
+def rDashTurn():
+  x5 = np.array(CurrentCube[0:9,4])
 
   temp = x5[6:9]
   temp = np.array(temp)
@@ -435,33 +383,32 @@ def rDashTurn(CA):
 
   x5 = x5[0:6]
 
-  temp2 = np.array(CA[3:6,10])
+  temp2 = np.array(CurrentCube[3:6,10])
   temp2 = np.flip(temp2)
 
   for i in range(0,3):
-    CA[i,4] = temp2[i]
+    CurrentCube[i,4] = temp2[i]
 
   for i in range(0,3):
-    CA[i+3,10] = temp[i]
+    CurrentCube[i+3,10] = temp[i]
 
   for i in range(0,6):
-    CA[i+3,4] = x5[i]
+    CurrentCube[i+3,4] = x5[i]
   
-  return(CA)
+  return
 
 
 
 # r'
-def rDash(CA):
-  CA = rDashTurn(CA)
-  CA = RDashTurn(CA)
-  CA = RDashRotate(CA)
-  return CA
+def rDash():
+  RDash()
+  rDashTurn()
+  return
 
 
 # L
-def LTurn(CA):
-  x5 = np.array(CA[0:9,3])
+def LTurn():
+  x5 = np.array(CurrentCube[0:9,3])
 
   temp = x5[6:9]
   temp = np.array(temp)
@@ -470,27 +417,27 @@ def LTurn(CA):
   x5 = x5[0:6]
 
   for i in range(0,6):
-    CA[i+3:i+9,3] = x5[i]
+    CurrentCube[i+3:i+9,3] = x5[i]
 
-  temp2 = np.array(CA[3:6,11])
+  temp2 = np.array(CurrentCube[3:6,11])
   temp2 = np.flip(temp2)
 
   for i in range(0,3):
-    CA[i,3] = temp2[i]
+    CurrentCube[i,3] = temp2[i]
 
   for i in range(0,3):
-    CA[i+3,11] = temp[i]
+    CurrentCube[i+3,11] = temp[i]
 
-  return(CA)
+  return
 
 
 # Rotate the Left Face
-def LRotate(CA):
+def LRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(0,3):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -500,58 +447,59 @@ def LRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j] = temp2[i,j]
+      CurrentCube[i+3,j] = temp2[i,j]
 
-  return(CA)
+  return
 
 # L
-def L(CA):
-  CA = LTurn(CA)
-  CA = LRotate(CA)
-  return CA
+def L():
+  LTurn()
+  LRotate()
+  return
 
 
 # L2
-def L2(CA):
-  CA = L(L(CA))
-  return CA
+def L2():
+  L()
+  L()
+  return
 
 
 # L Dash Turn
-def LDashTurn(CA):
+def LDashTurn():
   x5 = []
   
   for i in range(0,9):
-    x5.append(CA[i,3])
+    x5.append(CurrentCube[i,3])
   
   x5 = np.roll(x5,-3)
   
   for i in range(0,6):
-    CA[i,3] = x5[i]
+    CurrentCube[i,3] = x5[i]
   
   x5 = np.flip(x5)
   
   tempList = []
   for i in range(0,3):
-    tempList.append(CA[i+3,11])
+    tempList.append(CurrentCube[i+3,11])
   
   tempList2 = np.flip(tempList)
   
   for i in range(0,3):
-    CA[i+6,3] = tempList2[i]
+    CurrentCube[i+6,3] = tempList2[i]
   
   for i in range(0,3):
-    CA[i+3,11] = x5[i]
+    CurrentCube[i+3,11] = x5[i]
   
-  return CA
+  return
 
 # Rotate the Left Face the Other Way to LRotate
-def LDashRotate(CA):
+def LDashRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(0,3):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -561,21 +509,21 @@ def LDashRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j] = temp2[i,j]
+      CurrentCube[i+3,j] = temp2[i,j]
 
-  return(CA)
+  return
 
 
 # Combine LDashTurn and LDashRotate
-def LDash(CA):
-  CA = LDashTurn(CA)
-  CA = LDashRotate(CA)
-  return CA
+def LDash():
+  LDashTurn()
+  LDashRotate()
+  return
 
 
 # Turn the middle layer for l turn
-def lTurn(CA):
-  x5 = np.array(CA[0:9,4])
+def lTurn():
+  x5 = np.array(CurrentCube[0:9,4])
 
   temp = x5[6:9]
   temp = np.array(temp)
@@ -583,89 +531,91 @@ def lTurn(CA):
 
   x5 = x5[0:6]
 
-  temp2 = np.array(CA[3:6,10])
+  temp2 = np.array(CurrentCube[3:6,10])
   temp2 = np.flip(temp2)
 
   for i in range(0,3):
-    CA[i,4] = temp2[i]
+    CurrentCube[i,4] = temp2[i]
 
   for i in range(0,3):
-    CA[i+3,10] = temp[i]
+    CurrentCube[i+3,10] = temp[i]
 
   for i in range(0,6):
-    CA[i+3,4] = x5[i]
+    CurrentCube[i+3,4] = x5[i]
   
-  return(CA)
+  return
 
 # l Function
-def l(CA):
-  CA = lTurn(CA)
-  CA = L(CA)
-  return CA
+def l():
+  lTurn()
+  L()
+  return
 
 # l2
-def l2(CA):
-  CA = l(l(CA))
-  return CA
+def l2():
+  l()
+  l()
+  return
 
 
 # l' Tunr center column
-def lDashTurn(CA):
+def lDashTurn():
   x5 = []
   
   for i in range(0,9):
-    x5.append(CA[i,4])
+    x5.append(CurrentCube[i,4])
   
   x5 = np.roll(x5,-3)
   
   for i in range(0,6):
-    CA[i,4] = x5[i]
+    CurrentCube[i,4] = x5[i]
   
   x5 = np.flip(x5)
   
   tempList = []
   for i in range(0,3):
-    tempList.append(CA[i+3,10])
+    tempList.append(CurrentCube[i+3,10])
   
   tempList2 = np.flip(tempList)
   
   for i in range(0,3):
-    CA[i+6,4] = tempList2[i]
+    CurrentCube[i+6,4] = tempList2[i]
   
   for i in range(0,3):
-    CA[i+3,10] = x5[i]
+    CurrentCube[i+3,10] = x5[i]
 
-  return CA
+  return
 
 # l'
-def lDash(CA):
-  CA = lDashTurn(CA)
-  CA = LDash(CA)
-  return CA
+def lDash():
+  lDashTurn()
+  LDash()
+  return
 
 # M
-def M(CA):
-  CA = rDashTurn(CA)
-  return(CA)
+def M():
+  rDashTurn()
+  return
 
 # M'
-def MDash(CA):
-  CA = rTurn(CA)
-  return CA
+def MDash():
+  rTurn()
+  return 
 
 
 # M2
-def M2(CA):
-  CA = M(M(CA))
-  return CA
+def M2():
+  M()
+  M()
+  return 
 
 # Front Face
-def FRotate(CA):
+def FRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(3,6):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -675,22 +625,22 @@ def FRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+3] = temp2[i,j]
+      CurrentCube[i+3,j+3] = temp2[i,j]
 
-  return(CA)
+  return
 
 # Shift edges around F Face
-def FTurn(CA):
+def FTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[2,i+3])
-    left.append(CA[i+3,2])
-    right.append(CA[i+3,6])
-    bottom.append(CA[6,i+3])
+    top.append(CurrentCube[2,i+3])
+    left.append(CurrentCube[i+3,2])
+    right.append(CurrentCube[i+3,6])
+    bottom.append(CurrentCube[6,i+3])
 
   temp = top
   top = np.flip(left)
@@ -699,39 +649,40 @@ def FTurn(CA):
   right = temp
 
   for i in range(0,3):
-    CA[2,i+3] = top[i]
-    CA[i+3,2] = left[i]
-    CA[i+3,6] = right[i]
-    CA[6,i+3] = bottom[i]
+    CurrentCube[2,i+3] = top[i]
+    CurrentCube[i+3,2] = left[i]
+    CurrentCube[i+3,6] = right[i]
+    CurrentCube[6,i+3] = bottom[i]
 
-  return CA
+  return
 
 
 # Combine FTurn and FRotate
-def F(CA):
-  CA = FTurn(CA)
-  CA = FRotate(CA)
-  return CA
+def F():
+  FTurn()
+  FRotate()
+  return
   
 
 # F2
-def F2(CA):
-  CA = F(F(CA))
-  return CA
+def F2():
+  F()
+  F()
+  return
 
 
 # Turn the edges for F' Turn
-def FDashTurn(CA):
+def FDashTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[2,i+3])
-    left.append(CA[i+3,2])
-    right.append(CA[i+3,6])
-    bottom.append(CA[6,i+3])
+    top.append(CurrentCube[2,i+3])
+    left.append(CurrentCube[i+3,2])
+    right.append(CurrentCube[i+3,6])
+    bottom.append(CurrentCube[6,i+3])
 
   temp = top
   top = right
@@ -740,20 +691,20 @@ def FDashTurn(CA):
   left = np.flip(temp)  
 
   for i in range(0,3):
-    CA[2,i+3] = top[i]
-    CA[i+3,2] = left[i]
-    CA[i+3,6] = right[i]
-    CA[6,i+3] = bottom[i]
+    CurrentCube[2,i+3] = top[i]
+    CurrentCube[i+3,2] = left[i]
+    CurrentCube[i+3,6] = right[i]
+    CurrentCube[6,i+3] = bottom[i]
 
-  return CA
+  return
 
 # Rotate the F face anticlockwise 90 degrees
-def FDashRotate(CA):
+def FDashRotate():
   tempArr = []
 
   for i in range(3,6):
     for j in range(3,6):
-      tempArr.append(CA[i,j])
+      tempArr.append(CurrentCube[i,j])
 
   temp2 = tempArr
   temp2 = np.array(temp2)
@@ -763,30 +714,30 @@ def FDashRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+3] = temp2[i,j]
+      CurrentCube[i+3,j+3] = temp2[i,j]
 
-  return(CA)
+  return
 
 # Combine FDashTurn and FDashRotate into FDash
-def FDash(CA):
-  CA = FDashTurn(CA)
-  CA = FDashRotate(CA)
-  return CA
+def FDash():
+  FDashTurn()
+  FDashRotate()
+  return
 
 
 
 # Turn the centre horizontal layer
-def fTurn(CA):
+def fTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[1,i+3])
-    left.append(CA[i+3,1])
-    right.append(CA[i+3,7])
-    bottom.append(CA[7,i+3])
+    top.append(CurrentCube[1,i+3])
+    left.append(CurrentCube[i+3,1])
+    right.append(CurrentCube[i+3,7])
+    bottom.append(CurrentCube[7,i+3])
 
   temp = top
   top = np.flip(left)
@@ -795,39 +746,39 @@ def fTurn(CA):
   right = temp
 
   for i in range(0,3):
-    CA[1,i+3] = top[i]
-    CA[i+3,1] = left[i]
-    CA[i+3,7] = right[i]
-    CA[7,i+3] = bottom[i]
+    CurrentCube[1,i+3] = top[i]
+    CurrentCube[i+3,1] = left[i]
+    CurrentCube[i+3,7] = right[i]
+    CurrentCube[7,i+3] = bottom[i]
 
-  return CA
+  return
 
 # Combine fTurn with F into f
-def f(CA):
-  CA = fTurn(CA)
-  CA = F(CA)
-  return CA
+def f():
+  fTurn()
+  F()
+  return
 
 
 # f2
-def f2(CA):
-  CA = f(f(CA))
-  return CA
-
+def f2():
+  f()
+  f()
+  return
 
 
 # fDashTurn
-def fDashTurn(CA):
+def fDashTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[1,i+3])
-    left.append(CA[i+3,1])
-    right.append(CA[i+3,7])
-    bottom.append(CA[7,i+3])
+    top.append(CurrentCube[1,i+3])
+    left.append(CurrentCube[i+3,1])
+    right.append(CurrentCube[i+3,7])
+    bottom.append(CurrentCube[7,i+3])
 
   temp = top
   top = right
@@ -836,27 +787,27 @@ def fDashTurn(CA):
   left = np.flip(temp)  
 
   for i in range(0,3):
-    CA[1,i+3] = top[i]
-    CA[i+3,1] = left[i]
-    CA[i+3,7] = right[i]
-    CA[7,i+3] = bottom[i]
+    CurrentCube[1,i+3] = top[i]
+    CurrentCube[i+3,1] = left[i]
+    CurrentCube[i+3,7] = right[i]
+    CurrentCube[7,i+3] = bottom[i]
 
-  return CA
+  return
 
 # f'
-def fDash(CA):
-  CA = fDashTurn(CA)
-  CA = FDash(CA)
-  return CA
+def fDash():
+  fDashTurn()
+  FDash()
+  return
 
 
 
 # Back Face Rotate
-def BRotate(CA):
+def BRotate():
   BF = []
   for i in range(0,3):
     for j in range(0,3):
-      BF.append(CA[i+3,j+9])
+      BF.append(CurrentCube[i+3,j+9])
 
   BF = np.array(BF)
   BF = BF.reshape(3,3)
@@ -865,23 +816,23 @@ def BRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+9] = BF[i,j]
+      CurrentCube[i+3,j+9] = BF[i,j]
 
 
-  return CA
+  return
 
 # B Edge Rotation
-def BTurn(CA):
+def BTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[0,i+3])
-    left.append(CA[i+3,0])
-    right.append(CA[i+3,8])
-    bottom.append(CA[8,i+3])
+    top.append(CurrentCube[0,i+3])
+    left.append(CurrentCube[i+3,0])
+    right.append(CurrentCube[i+3,8])
+    bottom.append(CurrentCube[8,i+3])
 
   temp = top
   top = right
@@ -890,38 +841,39 @@ def BTurn(CA):
   left = np.flip(temp)  
 
   for i in range(0,3):
-    CA[0,i+3] = top[i]
-    CA[i+3,0] = left[i]
-    CA[i+3,8] = right[i]
-    CA[8,i+3] = bottom[i]
+    CurrentCube[0,i+3] = top[i]
+    CurrentCube[i+3,0] = left[i]
+    CurrentCube[i+3,8] = right[i]
+    CurrentCube[8,i+3] = bottom[i]
 
-  return CA
+  return
 
 # Combine BTurn and BRotate
-def B(CA):
-  CA = BRotate(CA)
-  CA = BTurn(CA)
-  return CA
+def B():
+  BRotate()
+  BTurn()
+  return
 
 
 # B2
-def B2(CA):
-  CA = B(B(CA))
-  return CA
+def B2():
+  B()
+  B()
+  return
 
 
 # B'
-def BDashTurn(CA):
+def BDashTurn():
   top = []
   left = []
   right = []
   bottom = []
 
   for i in range(0,3):
-    top.append(CA[0,i+3])
-    left.append(CA[i+3,0])
-    right.append(CA[i+3,8])
-    bottom.append(CA[8,i+3])
+    top.append(CurrentCube[0,i+3])
+    left.append(CurrentCube[i+3,0])
+    right.append(CurrentCube[i+3,8])
+    bottom.append(CurrentCube[8,i+3])
 
   temp = top
   top = np.flip(left)
@@ -930,19 +882,19 @@ def BDashTurn(CA):
   right = temp
 
   for i in range(0,3):
-    CA[0,i+3] = top[i]
-    CA[i+3,0] = left[i]
-    CA[i+3,8] = right[i]
-    CA[8,i+3] = bottom[i]
+    CurrentCube[0,i+3] = top[i]
+    CurrentCube[i+3,0] = left[i]
+    CurrentCube[i+3,8] = right[i]
+    CurrentCube[8,i+3] = bottom[i]
 
-  return CA
+  return
 
 # B' Rotate Face
-def BDashRotate(CA):
+def BDashRotate():
   BF = []
   for i in range(0,3):
     for j in range(0,3):
-      BF.append(CA[i+3,j+9])
+      BF.append(CurrentCube[i+3,j+9])
 
   BF = np.array(BF)
   BF = BF.reshape(3,3)
@@ -951,127 +903,137 @@ def BDashRotate(CA):
 
   for i in range(0,3):
     for j in range(0,3):
-      CA[i+3,j+9] = BF[i,j]
+      CurrentCube[i+3,j+9] = BF[i,j]
 
 
-  return CA
+  return
 
 # Combine BDashTurn and BDashRotate into BDash
-def BDash(CA):
-  CA = BDashTurn(CA)
-  CA = BDashRotate(CA)
-  return CA
+def BDash():
+  BDashTurn()
+  BDashRotate()
+  return
 
 
-def b(CA):
-  CA = fDashTurn(CA)
-  CA = B(CA)
-  return CA
+def b():
+  fDashTurn()
+  B()
+  return
 
 
-def b2(CA):
-  CA = b(b(CA))
-  return CA
+def b2():
+  b()
+  b()
+  return
 
-def bDash(CA):
-  CA = fTurn(CA)
-  CA = BDash(CA)
-  return CA
+def bDash():
+  fTurn()
+  BDash()
+  return
 
 
 # E functions
-def E(CA):
-  RA=np.roll(CA[4],3)
-  CA[4] = RA
-  return CA
+def E():
+  CurrentCube[4]=np.roll(CurrentCube[4],3)
+  return
 
-def EDash(CA):
-  RA=np.roll(CA[4],-3)
-  CA[4] = RA
-  return CA
+def EDash():
+  CurrentCube[4]=np.roll(CurrentCube[4],-3)
+  return
 
-def E2(CA):
-  CA = E(E(CA))
-  return CA
+def E2():
+  E()
+  E()
+  return
 
 
 
 # S functions
-def S(CA):
-  CA = fTurn(CA)
-  return CA
+def S():
+  fTurn()
+  return
 
-def SDash(CA):
-  CA = fDashTurn(CA)
-  return CA
+def SDash():
+  fDashTurn()
+  return
 
-def S2(CA):
-  CA = S(S(CA))
-  return CA
+def S2():
+  S()
+  S()
+  return
 
 
 # Whole cube rotations
-def x(CA):
-  CA = r(LDash(CA))
-  return CA
+def x():
+  r()
+  LDash()
+  return
 
-def xDash(CA):
-  CA = rDash(L(CA))
-  return CA
+def xDash():
+  rDash()
+  L()
+  return
 
-def x2(CA):
-  CA = x(x(CA))
-  return CA
-
-
-def y(CA):
-  CA = u(DDash(CA))
-  return CA
-
-def yDash(CA):
-  CA = uDash(D(CA))
-  return CA
-
-def y2(CA):
-  CA = y(y(CA))
-  return CA
+def x2():
+  x()
+  x()
+  return
 
 
-def z(CA):
-  CA = f(BDash(CA))
-  return CA
+def y():
+  u()
+  DDash()
+  return
 
-def zDash(CA):
-  CA = fDash(B(CA))
-  return CA
+def yDash():
+  uDash()
+  D()
+  return
 
-def z2(CA):
-  CA = z(z(CA))
-  return CA
+def y2():
+  y()
+  y()
+  return
+
+
+def z():
+  f()
+  BDash()
+  return
+
+def zDash():
+  fDash()
+  B()
+  return
+
+def z2():
+  z()
+  z()
+  return
 
 
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(1,5)
+  N = random.randint(1,10)
   return N
 
 # Make an empty list N items long to fill with the moves
 MovesToDo = [" "] * numMoves()
 
 # Generate Moves
-def genMoves(CA):  
-  for i in range(len(CA)):
-    CA[i] = random.randint(0,51)
-  return CA
+def genMoves():  
+  for i in range(len(MovesToDo)):
+    MovesToDo[i] = random.randint(0,51)
+  return
 
 # Convert the numbers generated to the corresponding functions
-def convToMove(CA):
-  for i in range(len(CA)):
-    j = CA[i]
-    CA[i] = MovesList[j]
-    
-  return CA
+def convToMove():
+  genMoves()
+  for i in range(len(MovesToDo)):
+    j = MovesToDo[i]
+    MovesToDo[i] = MovesList[j]
+  return
 
 def convToMoveOutput(CA):
   for i in range(len(CA)):
@@ -1103,136 +1065,154 @@ MovesListForUser = ["U", "U'", "U2", "u", "u'", "u2", "D", "D'", "D2",
 
 # Make a list of turns
 def genList():
-  list1 = convToMove(genMoves(MovesToDo))[0:len(MovesToDo)]
+  list1 = convToMove()
   return list1
 
 
 # Apply the moves to the cube
-def scrambleCube(CA):
-  function = genList()
-  print(function)
+def scrambleCube():
+  genList()
+  print("Scramble:",MovesToDo)
   for i in range(len(MovesToDo)):
-    nextfunction = function[i]
-    SA = eval(nextfunction)
-    CA = SA(CA)
-  return CA
+    nextfunction = MovesToDo[i]
+    t = eval(nextfunction)
+    t()
+  return
 
 
 
 # Apply a pre-set scramble for testing purposes
-def scrambleTest(CA):
+def scrambleTest():
   moves = ["UDash", "fDash","M2"]
   print("Test scramble:",moves)
   for i in range(len(moves)):
     t = eval(moves[i])
-    CA = t(CA)
-  return CA
+    t()
+  return
 
+
+# Create a list that contains all of the moves to solve the cube
+finalMoveSet = []
+# Reset the list
+def clearFinalMoves():
+  global finalMoveSet
+  finalMoveSet = []
 
 
 # Look at the middle piece on the bottom face
-def bottomCentre(CA):
-  piece = CA[7,4]
+def bottomCentre():
+  piece = CurrentCube[7,4]
   return piece
 
 # Find the edges of the same colour
-def locateEdges(CA):
+def locateEdges():
   listEdges = [(),(),(),()]
-  colour = bottomCentre(CA)
+  colour = bottomCentre()
   for i in range(0,9):
     for j in range(0,12):
-      if CA[i,j][0] == colour[0]:
-        if CA[i,j][1] == "b":
+      if CurrentCube[i,j][0] == colour[0]:
+        if CurrentCube[i,j][1] == "b":
           print("b",i,j)
           listEdges[0] = i,j
-        elif CA[i,j][1] == "d":
+        elif CurrentCube[i,j][1] == "d":
           listEdges[1] = i,j
-        elif  CA[i,j][1] == "f":
+        elif  CurrentCube[i,j][1] == "f":
           listEdges[2] = i,j
-        elif CA[i,j][1] == "h":
+        elif CurrentCube[i,j][1] == "h":
           listEdges[3] = i,j
   return listEdges
 
 
-
 # Recursive approach
-def bottomEdges(CA):
-  Stashed = copy.deepcopy(CA)
-  while checkEdges(CA) == False:
+def bottomEdges():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
+  start = time.time()
+  while checkEdges() == False:
     k = 0
     while k < 10:
-      for n in range(k):
+      for n in range(1,k):
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            print(list1)
             for i in range(len(list1)):
               t = eval(list1[i])
-              CA = t(CA)
-            if checkEdges(CA) == True:
-              print(list1)
-              return CA
-            CA = copy.deepcopy(Stashed)
+              t()
+            if checkEdges() == True:
+              end = time.time()
+              finalMoveSet.append(combination)
+              print("Bottom cross finished. ")
+              print("Solving combination:",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              return
+            CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
-  return CA
-
+  end = time.time()
+  print("Edges already in correct positions. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
 
   
-def checkEdges(CA):
-  colour = bottomCentre(CA)
-  if CA[6,4][0] == colour[0] and CA[6,4][1] == "b" and CA[8,4][0] == colour[0] and CA[8,4][1] == "h" and CA[7,3][0] == colour[0] and CA[7,3][1] == "d" and CA[7,5][0] == colour[0] and CA[7,5][1] == "f":
+def checkEdges():
+  colour = bottomCentre()
+  if CurrentCube[6,4][0] == colour[0] and CurrentCube[6,4][1] == "b" and CurrentCube[8,4][0] == colour[0] and CurrentCube[8,4][1] == "h" and CurrentCube[7,3][0] == colour[0] and CurrentCube[7,3][1] == "d" and CurrentCube[7,5][0] == colour[0] and CurrentCube[7,5][1] == "f":
     return True
   else:
     return False
 
 
 # Brute force corners into position
-def corners(CA):
-  Stashed = copy.deepcopy(CA)
+def corners():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
   moveCount = 0
-  while checkCorners(CA) == False:
+  start = time.time()
+  while checkCorners() == False:
     k = 0
     while k < 10:
-      for i in range(k):
-        pool=[MovesList]*(i+1)
-
-        for n in itertools.product(*pool):
-          function = []
-          for a in range(k):
-            function.append([])
-            function[0] = n
-            for move in n:
-              t = eval(move)
-              CA = t(CA)
-              moveCount = moveCount + 1
-              if checkCorners(CA) == True:
-                return CA
-          CA = copy.deepcopy(Stashed)
+      for n in range(1,k):
+        combinations = itertools.product(MovesList, repeat=n)
+        for combination in combinations:
+            list1 = combination
+            for i in range(len(list1)):
+              t = eval(list1[i])
+              t()
+            if checkCorners() == True:
+                end = time.time()
+                finalMoveSet.append(combination)
+                print("Bottom corners in correct positions. ")
+                print("Solving combination:",n)
+                print("Time taken:",(end-start),"seconds. ")
+                return
+            CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
-  return CA
+  end = time.time()
+  print("Corners already in correct positions. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
 
 
 
 # Check for corner and corresponding edge piece locations
-def findCorners(CA):
-  colour = bottomCentre(CA)
+def findCorners():
+  colour = bottomCentre()
   cornerPositions = [(""),(""),(""),("")]
   for i in range(0,9):
     for j in range(0,12):
-      if CA[i,j][0] == colour[0] and CA[i,j][1] == "a":
+      if CurrentCube[i,j][0] == colour[0] and CurrentCube[i,j][1] == "a":
         cornerPositions[0] = i,j
-      elif CA[i,j][0] == colour[0] and CA[i,j][1] == "c":
+      elif CurrentCube[i,j][0] == colour[0] and CurrentCube[i,j][1] == "c":
         cornerPositions[1] = i,j
-      elif  CA[i,j][0] == colour[0] and CA[i,j][1] == "g":
+      elif  CurrentCube[i,j][0] == colour[0] and CurrentCube[i,j][1] == "g":
         cornerPositions[2] = i,j
-      elif CA[i,j][0] == colour[0] and CA[i,j][1] == "i":
+      elif CurrentCube[i,j][0] == colour[0] and CurrentCube[i,j][1] == "i":
         cornerPositions[3] = i,j
   return cornerPositions
 
 
-def checkCorners(CA):
-  colour = bottomCentre(CA)
-  if CA[6,3][0] == colour[0] and CA[6,3][1] == "a" and CA[6,5][0] == colour[0] and CA[6,5][1] == "c" and CA[8,3][0] == colour[0] and CA[8,3][1] == "g" and CA[8,5][0] == colour[0] and CA[8,5][1] == "i" and CA[7,4][0] == colour[0] and CA[7,4][1] == "e":
+def checkCorners():
+  colour = bottomCentre()
+  if CurrentCube[6,3][0] == colour[0] and CurrentCube[6,3][1] == "a" and CurrentCube[6,5][0] == colour[0] and CurrentCube[6,5][1] == "c" and CurrentCube[8,3][0] == colour[0] and CurrentCube[8,3][1] == "g" and CurrentCube[8,5][0] == colour[0] and CurrentCube[8,5][1] == "i" and CurrentCube[7,4][0] == colour[0] and CurrentCube[7,4][1] == "e":
     return True
   else:
     return False
@@ -1240,102 +1220,169 @@ def checkCorners(CA):
 
 
 # Locate the edge pieces that correspond with the corners found with findCorners
-def findEdges(CA):
-  corners = findCorners(CA)
+def findEdges():
+  corners = findCorners()
   return corners
 
 
 
 # Solve the edges and corners of the bottom face using brute force
-def bottomFace(CA):
-  Stashed = copy.deepcopy(CA)
+def bottomFace():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
   moveCount = 0
-  while checkCorners(CA) == False or checkEdges(CA) == False:
+  start = time.time()
+  while checkCorners() == False or checkEdges() == False:
     k = 0
     while k < 10:
-      for i in range(k):
-        pool=[MovesList]*(i+1)
-
-        for n in itertools.product(*pool):
-          function = []
-          for a in range(k):
-            function.append([])
-            function[0] = n
-            for move in n:
-              t = eval(move)
-              CA = t(CA)
-              moveCount = moveCount + 1
-              if checkCorners(CA) == True and checkEdges(CA) == True:
-                print("Solving combination:",n)
-                return CA
-          CA = copy.deepcopy(Stashed)
-      k = k + 1
-  return CA
-
-
-# Do each corner of F2L independently
-
-def BruteF2L(CA):
-  Stashed = copy.deepcopy(CA)
-  moveCount = 0
-  while F2LCheck(F2LFaceList,CA) == False or checkCorners(CA) == False or checkEdges(CA) == False:
-    k = 0
-    while k < 10:
-      for i in range(k):
-        pool=[MovesList]*(i+1)
-
-        for n in itertools.product(*pool):
-          function = []
-          for a in range(k):
-            function.append([])
-            function[0] = n
-            for move in n:
-              t = eval(move)
-              CA = t(CA)
-              moveCount = moveCount + 1
-              if F2LCheck(F2LFaceList,CA) == True and checkCorners(CA) == True and checkEdges(CA) == True:
-                print("Solving combination:",n)
-                return CA
-          CA = copy.deepcopy(Stashed)
-      k = k + 1
-  return CA
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Solve the cube by iterating through every possible set of 20 or less moves
-# 
-# Working, except not updating Solved properly
-# CA == SafeSolved at point of return CA
-def bruteForce(CA):
-  Stashed = copy.deepcopy(CA)
-  global MovesList
-  moveCount = 0
-  if checkColour(faceList,CA) == False:
-    k = 0
-    while k < 6:
       for n in range(1,k):
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
             for i in range(len(list1)):
               t = eval(list1[i])
-              CA = t(CA)
-            if checkColour(faceList,CA) == True:
-              print("Solving combination",combination)
-              return CA
-            CA = copy.deepcopy(Stashed)
+              t()
+            if checkCorners() == True and checkEdges() == True:
+                end = time.time()
+                finalMoveSet.append(combination)
+                print("Bottom face finished. ")
+                print("Solving combination:",combination)
+                print("Time taken:",(end-start),"seconds. ")
+                return
+            CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
-  return CA
+  end = time.time()
+  print("Bottom face already solved. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
+
+
+
+# Check each corner of F2L independently
+def BruteF2L():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
+  moveCount = 0
+  start = time.time()
+  while F2LCheck(F2LFaceList) == False or checkCorners() == False or checkEdges() == False:
+    k = 0
+    while k < 10:
+      for n in range(1,k):
+        combinations = itertools.product(MovesList, repeat=n)
+        for combination in combinations:
+            list1 = combination
+            for i in range(len(list1)):
+              t = eval(list1[i])
+              t()
+            if F2LCheck(F2LFaceList) == True and checkCorners() == True and checkEdges() == True:
+                end = time.time()
+                finalMoveSet.append(combination)
+                print("F2L finished. ")
+                print("Solving combination:",combination)
+                print("Time taken:",(end-start),"seconds. ")
+                return
+            CurrentCube = copy.deepcopy(Stashed)
+      k = k + 1
+  end = time.time()
+  print("F2L already completed. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
+
+
+
+def BruteOLL():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
+  moveCount = 0
+  start = time.time()
+  while F2LCheck(F2LFaceList) == False or checkFace(bottom) == False or checkFace(top) == False:
+    k = 0
+    while k < 10:
+      for n in range(1,k):
+        combinations = itertools.product(MovesList, repeat=n)
+        for combination in combinations:
+            list1 = combination
+            for i in range(len(list1)):
+              t = eval(list1[i])
+              t()
+            if F2LCheck(F2LFaceList) == True and checkFace(bottom) == True and checkFace(top) == True:
+                end = time.time()
+                finalMoveSet.append(combination)
+                print("OLL finished. ")
+                print("Solving combination:",combination)
+                print("Time taken:",(end-start),"seconds. ")
+                return
+            CurrentCube = copy.deepcopy(Stashed)
+      k = k + 1
+  end = time.time()
+  print("OLL already completed. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
+
+# Longest PLL is 21 moves
+def BrutePLL():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
+  moveCount = 0
+  start = time.time()
+  while checkColour(faceList) == False:
+    k = 0
+    while k < 10:
+      for n in range(1,k):
+        combinations = itertools.product(MovesList, repeat=n)
+        for combination in combinations:
+            list1 = combination
+            for i in range(len(list1)):
+              t = eval(list1[i])
+              t()
+            if checkColour(faceList) == True:
+                end = time.time()
+                finalMoveSet.append(combination)
+                print("PLL finished. ")
+                print("Solving combination:",combination)
+                print("Time taken:",(end-start),"seconds. ")
+                return
+            CurrentCube = copy.deepcopy(Stashed)
+      k = k + 1
+  end = time.time()
+  print("PLL already completed. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
+
+
+
+
+
+
+
+# Solve the whole cube by iterating through every possible set of 20 or less moves
+def bruteForce():
+  global CurrentCube
+  Stashed = copy.deepcopy(CurrentCube)
+  moveCount = 0
+  start = time.time()
+  if checkColour(faceList) == False:
+    k = 0
+    while k < 10:
+      for n in range(1,k):
+        combinations = itertools.product(MovesList, repeat=n)
+        for combination in combinations:
+            list1 = combination
+            for i in range(len(list1)):
+              t = eval(list1[i])
+              t()
+            if checkColour(faceList) == True:
+              end = time.time()
+              print("Cube Solved. ")
+              print("Solving combination",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              return
+            CurrentCube = copy.deepcopy(Stashed)
+      k = k + 1
+  end = time.time()
+  print("Cube is already solved. ")
+  print("Time taken:",(end-start),"seconds. ")
+  return
 
 
 
@@ -1343,31 +1390,28 @@ def bruteForce(CA):
 
 # Restore Solved State
 def restore():
-  global Solved
-  global SafeSolved
-  Solved = copy.deepcopy(SafeSolved)
-
+  global CurrentCube
+  CurrentCube = copy.deepcopy(Solved)
+  return
 
 
 # Output the Current State of 'Solved'
-def solved():
-  global Solved
-  print(Solved)
+def current():
+  print(CurrentCube)
+  return
 
 
-
-# Check if Solved is the same as SafeSolved
+# Check if CurrentCube is the same as Solved, doesn't work for a
+# solved cube rotated differently
 def check():
-  global Solved
-  global SafeSolved
-  return np.array_equal(Solved,SafeSolved)
-# Only works first few runs, compares correctly,
-# but SafeSolved is changed at some point, don't know where/what conditions
+  return np.array_equal(Solved,CurrentCube)
+
 
 
 
 # Better check function
 # Check each 3x3 face individually
+# Works for a rotated but solved cube
 
 top = (0,3,3,6)
 front = (3,6,3,6)
@@ -1380,14 +1424,11 @@ faceList = [top,front,bottom,left,right,back]
 F2LFaceList = [front,left,right,back]
 
 def checkFace(CF):
-  global Solved
-  
   num1 = CF[0]
   num2 = CF[1]
   num3 = CF[2]
-  num4 = CF[3]  
-  
-  face = Solved[num1:num2, num3:num4]
+  num4 = CF[3]
+  face = CurrentCube[num1:num2, num3:num4]
   middlePiece = face[1,1][0]
   for i in range(0,3):
     for j in range(0,3):
@@ -1396,14 +1437,13 @@ def checkFace(CF):
   return True
 
 
-
-def checkColour(CF,CA):
+def checkColour(CF):
   for i in range(len(CF)):
     num1 = CF[i][0]
     num2 = CF[i][1]
     num3 = CF[i][2]
     num4 = CF[i][3]
-    face = CA[num1:num2,num3:num4]
+    face = CurrentCube[num1:num2,num3:num4]
     middlePiece = face[1,1][0]
     for j in range(3):
       for k in range(3):
@@ -1412,17 +1452,30 @@ def checkColour(CF,CA):
   return True
 
 
-
-def F2LCheck(CF,CA):
+def F2LCheck(CF):
   for i in range(len(CF)):
     num1 = CF[i][0]
     num2 = CF[i][1]
     num3 = CF[i][2]
     num4 = CF[i][3]
-    face = CA[num1:num2,num3:num4]
+    face = CurrentCube[num1:num2,num3:num4]
     middlePiece = face[1,1][0]
     for i in range(1,3):
       if face[i,2][0] != middlePiece:
+        return False
+  return True
+
+
+def OLLCheck():
+  num1 = top[0]
+  num2 = top[1]
+  num3 = top[2]
+  num4 = top[3]
+  face = CurrentCube[num1:num2, num3:num4]
+  middlePiece = face[1,1][0]
+  for i in range(0,3):
+    for j in range(0,3):
+      if face[i,j][0] != middlePiece:
         return False
   return True
 
