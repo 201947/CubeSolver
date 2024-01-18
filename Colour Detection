@@ -1,0 +1,174 @@
+
+
+import numpy as np
+import cv2
+
+
+cap = cv2.VideoCapture(0) 
+
+red1_Lower = np.array([170,181,127])
+red1_upper = np.array([180,255,255])
+
+red2_lower = np.array([0,181,127])
+red2_upper = np.array([3,255,255])
+
+yellow_lower = np.array([30,127,90])
+yellow_upper = np.array([30,255,255])
+
+blue_lower = np.array([100,127,73])
+blue_upper = np.array([120,255,255])
+
+green_lower = np.array([60,181,80])
+green_upper = np.array([74,255,255])
+
+orange_lower = np.array([5,165,126])
+orange_upper = np.array([11,255,255])
+
+white_lower = np.array([120,20,127])
+white_upper = np.array([150,38,255])
+
+
+while True:
+
+    _, img = cap.read()
+    
+    frame = img[100:350,185:435]
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    w_mask = cv2.inRange(hsv,white_lower,white_upper)
+    b_mask = cv2.inRange(hsv,blue_lower,blue_upper)
+    r1_mask = cv2.inRange(hsv,red1_Lower,red1_upper)
+    r2_mask = cv2.inRange(hsv,red2_lower,red2_upper)
+    y_mask = cv2.inRange(hsv,yellow_lower,yellow_upper)
+    g_mask = cv2.inRange(hsv,green_lower,green_upper)
+    o_mask = cv2.inRange(hsv,orange_lower,orange_upper)
+
+    kernel = np.ones((5, 5), "uint8")
+
+    r1_mask = cv2.dilate(r1_mask, kernel)
+    r2_mask = cv2.dilate(r2_mask, kernel)
+    g_mask = cv2.dilate(g_mask, kernel)
+    b_mask = cv2.dilate(b_mask, kernel)
+    y_mask = cv2.dilate(y_mask, kernel)
+    o_mask = cv2.dilate(o_mask, kernel)
+    w_mask = cv2.dilate(w_mask, kernel)
+
+    counter = 0
+
+
+
+	# Red 1
+    contours, hierarchy = cv2.findContours(r1_mask,
+										cv2.RETR_TREE,
+										cv2.CHAIN_APPROX_SIMPLE)
+
+    for pic, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if(area > 4000):
+            counter += 1
+            x, y, w, h = cv2.boundingRect(contour)
+            frame = cv2.rectangle(frame, (x, y),
+									(x + w, y + h),
+									(0, 0, 255), 2)
+
+
+	# Red 2
+    contours, hierarchy = cv2.findContours(r2_mask,
+										cv2.RETR_TREE,
+										cv2.CHAIN_APPROX_SIMPLE)
+
+    for pic, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if(area > 4000):
+            counter += 1
+            x, y, w, h = cv2.boundingRect(contour)
+            frame = cv2.rectangle(frame, (x, y),
+									(x + w, y + h),
+									(0, 0, 0), 2)
+
+
+	# Green
+    contours, hierarchy = cv2.findContours(g_mask,
+										cv2.RETR_TREE,
+										cv2.CHAIN_APPROX_SIMPLE)
+
+    for pic, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if(area > 4000):
+            counter += 1
+            x, y, w, h = cv2.boundingRect(contour)
+            frame = cv2.rectangle(frame, (x, y),
+									(x + w, y + h),
+									(0, 255, 0), 2)
+
+	# Blue
+    contours, hierarchy = cv2.findContours(b_mask,
+										cv2.RETR_TREE,
+										cv2.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+        area = cv2.contourArea(contour)
+        if(area > 4000):
+            counter += 1
+            x, y, w, h = cv2.boundingRect(contour)
+            frame = cv2.rectangle(frame, (x, y),
+									(x + w, y + h),
+									(255, 0, 0), 2)
+
+    # Yellow
+    contours, hierarchy = cv2.findContours(y_mask,
+                                        cv2.RETR_TREE,
+                                        cv2.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if area > 4000:
+                counter += 1
+                x,y,w,h = cv2.boundingRect(contour)
+                frame = cv2.rectangle(frame, (x,y),
+                                      (x+w,y+h),
+                                      (0,255,255), 2)
+
+    # Orange
+    contours, hierarchy = cv2.findContours(o_mask,
+                                        cv2.RETR_TREE,
+                                        cv2.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if area > 4000:
+                counter += 1
+                x,y,w,h = cv2.boundingRect(contour)
+                frame = cv2.rectangle(frame, (x,y),
+                                      (x+w,y+h),
+                                      (0,127,255), 2)
+
+    # White
+    contours, hierarchy = cv2.findContours(w_mask,
+                                        cv2.RETR_TREE,
+                                        cv2.CHAIN_APPROX_SIMPLE)
+    for pic, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if area > 4000:
+                counter += 1
+                x,y,w,h = cv2.boundingRect(contour)
+                frame = cv2.rectangle(frame, (x,y),
+                                      (x+w,y+h),
+                                      (255,255,255), 2)
+
+
+
+    cv2.rectangle(img,(185,100),(435,350),(255,255,255),2)
+    cv2.imshow("Multiple Colour Detection in Real-Time", img)
+    print("Counter =",counter)
+
+    if cv2.waitKey(1)==32:
+        screenshot = img
+        cv2.imshow("screenshot",screenshot)
+
+    if cv2.waitKey(1)==27:
+        break
+
+
+cap.release()
+
+cv2.destroyAllWindows()
+
