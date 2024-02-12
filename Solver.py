@@ -961,7 +961,7 @@ def S2():
 
 
 # Whole cube rotations
-def x():
+def xMove():
   r()
   LDash()
   return
@@ -972,12 +972,12 @@ def xDash():
   return
 
 def x2():
-  x()
-  x()
+  xMove()
+  xMove()
   return
 
 
-def y():
+def yMove():
   u()
   DDash()
   return
@@ -988,8 +988,8 @@ def yDash():
   return
 
 def y2():
-  y()
-  y()
+  yMove()
+  yMove()
   return
 
 
@@ -1050,7 +1050,7 @@ MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
              "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
              "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
              "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2",
-             "x", "x2", "xDash", "y", "y2", "yDash", "z", "z2", "zDash"]
+             "xMove", "x2", "xDash", "yMove", "y2", "yDash", "z", "z2", "zDash"]
 
 
 # Make another list that outputs what the user sees
@@ -1068,6 +1068,8 @@ def genList():
   list1 = convToMove()
   return list1
 
+
+# eval() function: https://www.w3schools.com/python/ref_func_eval.asp
 
 # Apply the moves to the cube
 def scrambleCube():
@@ -1528,31 +1530,31 @@ coordinates = [(105,182,189,268),(105,182,270,352),(105,182,354,430),
                (267,345,189,268),(267,345,270,352),(267,345,354,430)]
 
 
-face = np.array([["","",""],
-                 ["","",""],
-                 ["","",""]])
+face = np.array([["  ","  ","  "],
+                 ["  ","  ","  "],
+                 ["  ","  ","  "]])
 
 cap = cv2.VideoCapture(0) 
 
-red1_Lower = np.array([169,124,60])
-red1_upper = np.array([180,255,255])
+red1_Lower = np.array([135,161,90])
+red1_upper = np.array([180,255,161])
 
 #red2_lower = np.array([0,181,127])
 #red2_upper = np.array([3,255,255])
 
-yellow_lower = np.array([29,203,105])
-yellow_upper = np.array([45,255,180])
+yellow_lower = np.array([5,143,98])
+yellow_upper = np.array([61,255,135])
 
-blue_lower = np.array([93,173,71])
-blue_upper = np.array([138,255,199])
+blue_lower = np.array([106,116,75])
+blue_upper = np.array([140,255,154])
 
-green_lower = np.array([40,90,0])
-green_upper = np.array([79,255,255])
+green_lower = np.array([53,75,0])
+green_upper = np.array([103,255,255])
 
-orange_lower = np.array([0,180,139])
-orange_upper = np.array([19,255,221])
+orange_lower = np.array([0,146,128])
+orange_upper = np.array([26,255,255])
 
-white_lower = np.array([0,110,0])
+white_lower = np.array([0,105,0])
 white_upper = np.array([255,140,255])
 
 #  whole frame = img[100:345,190:430]
@@ -1694,10 +1696,10 @@ if scan.lower() == "y" or scan.lower() == "yes":
                                         (x+w,y+h),
                                         (255,255,255), -1)
 
-    colour = "White"
-    colour2 = "Blue"
-    text = "Please position the "+colour+" face in the centre"
-    text2 = "of the screen, with "+colour2+" on the top face"
+    colour = ["White","Orange","Yellow","Red"]
+    colour2 = ["Blue","Red","Orange"]
+    text = "Please position the "+colour[0]+" face in the centre"
+    text2 = "of the screen, with "+colour2[0]+" on the top face"
 
     img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
     img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
@@ -1717,40 +1719,57 @@ if scan.lower() == "y" or scan.lower() == "yes":
         cv2.imshow("screenshot",screenshot)
         cv2.imwrite("Screenshot.jpeg", screenshot)
         colours = cv2.imread("Screenshot.jpeg", cv2.IMREAD_UNCHANGED)
-        
+      
         for i in range(3):
             for j in range(3):
                 pixel = colours[vertVals[i],horizVals[j]]
                 if pixel[0] < 10:
                     if pixel[1] < 10:
                         if pixel[2] > 245:
-                            face[i,j] = "R"
+                            face[i,j] = "Rx"
                     elif pixel[1] > 117 and pixel[1] < 137:
                         if pixel[2] > 245:
-                            face[i,j] = "O"
+                            face[i,j] = "Ox"
                     elif pixel[1] > 245:
                         if pixel[2] < 10:
-                            face[i,j] = "G"
+                            face[i,j] = "Gx"
                         elif pixel[2] > 245:
-                            face[i,j] = "Y"
+                            face[i,j] = "Yx"
                 elif pixel[0] > 245:
                     if pixel[1] < 10:
                         if pixel[2] < 10:
-                            face[i,j] = "B"
+                            face[i,j] = "Bx"
                     elif pixel[1] > 245:
                         if pixel[2] > 245:
-                            face[i,j] = "W"
+                            face[i,j] = "Wx"
                 else:
-                    face[i,j] = "X"
-        print("\n")
+                    face[i,j] = "██"
         face = np.flip(face,1)
         for i in range(3):
           for j in range(3):
             CurrentCube[i+3,j+3] = face[i,j]
-        print(CurrentCube)
 
     if cv2.waitKey(1)==27:
         break
+
+    if cv2.waitKey(1)==110:
+      print("\n")
+      yMove()
+      print("Rotate with y then scan face")
+
+    if cv2.waitKey(1)==112:
+      print("\n")
+      print(CurrentCube)
+
+    if cv2.waitKey(1)==116:
+      print("\n")
+      xDash()
+      print("Ready to scan top face")
+    
+    if cv2.waitKey(1)==98:
+      print("\n")
+      xMove()
+      print("Ready to scan bottom face")
 
 
 
@@ -1758,3 +1777,4 @@ cap.release()
 
 cv2.destroyAllWindows()
 
+ 
