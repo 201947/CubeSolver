@@ -17,8 +17,7 @@ import time
 import cv2
 
 
-# Start with the cube in a solved state
-Solved = np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
+Solved1= np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
                    ['  ','  ','  ','Bd','Be','Bf','  ','  ','  ','  ','  ','  '],
                    ['  ','  ','  ','Bg','Bh','Bi','  ','  ','  ','  ','  ','  '],
                    ['Oa','Ob','Oc','Wa','Wb','Wc','Ra','Rb','Rc','Ya','Yb','Yc'],
@@ -27,6 +26,18 @@ Solved = np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  ']
                    ['  ','  ','  ','Ga','Gb','Gc','  ','  ','  ','  ','  ','  '],
                    ['  ','  ','  ','Gd','Ge','Gf','  ','  ','  ','  ','  ','  '],
                    ['  ','  ','  ','Gg','Gh','Gi','  ','  ','  ','  ','  ','  ']])
+
+
+# Start with the cube in a solved state
+Solved = np.array([['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
+                   ['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
+                   ['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
+                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
+                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
+                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
+                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  '],
+                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  '],
+                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  ']])
 
 # Make a copy of the array in a solved state
 CurrentCube = copy.deepcopy(Solved)
@@ -1790,7 +1801,11 @@ edgeCoords = [(0,4),(1,3),(1,5),(2,4),(3,1),(4,0),(4,2),(5,1),
               (3,4),(4,3),(4,5),(5,4),(3,7),(4,6),(4,8),(5,7),
               (3,10),(4,9),(4,11),(5,10),(6,4),(7,3),(7,5),(8,4)]
 
-faceColours = ['W','Y','O','R']#,'B','G']
+cornerCoords = [(0,3),(3,0),(3,11),(0,5),(3,8),(3,9),(2,3),(3,2),
+                (3,3),(2,5),(3,5),(3,6),(5,2),(5,3),(6,3),(5,5),
+                (5,6),(6,5),(8,3),(5,0),(5,11),(8,5),(5,8),(5,9)]
+
+faceColours = ['W','Y','O','R','B','G']
 
 if finishedScanning==1:
   count=0
@@ -1801,7 +1816,7 @@ if finishedScanning==1:
         locations[count] = i
         count += 1
 
-    for i in range(len(locations)):
+    for i in range(4):
       (j,k) = locations[i]
       if k == 4:
         if j in (0,2,3,5,6,8):
@@ -1896,8 +1911,8 @@ if finishedScanning==1:
 
       elif CurrentCube[j,k][0] == 'R':
         if CurrentCube[index][0] == 'B':
-          CurrentCube[index] = 'Rb'
-          CurrentCube[j,k] = 'Bf'
+          CurrentCube[index] = 'Bf'
+          CurrentCube[j,k] = 'Rb'
         elif CurrentCube[index][0] == 'W':
           CurrentCube[index] = 'Rd'
           CurrentCube[j,k] = 'Wf'
@@ -1922,33 +1937,219 @@ if finishedScanning==1:
           CurrentCube[index] = 'Wh'
           CurrentCube[j,k] = 'Gb'
 
-      #elif CurrentCube[j,k][0] == 'O':
-      #  if CurrentCube[index][0] == 'B':
-      #    CurrentCube[index] = 'Bd'
-      #    CurrentCube[j,k] = 'Ob'
-      #  elif CurrentCube[index][0] == 'W':
-      #    CurrentCube[index] = 'Wd'
-      #    CurrentCube[j,k] = 'Of'
-      #  elif CurrentCube[index][0] == 'G':
-      #    CurrentCube[index] = 'Gd'
-      #    CurrentCube[j,k] = 'Oh'
-      #  elif CurrentCube[index][0] == 'Y':
-      #    CurrentCube[index] = 'Yf'
-      #    CurrentCube[j,k] = 'Od'
+      elif CurrentCube[j,k][0] == 'O':
+        if CurrentCube[index][0] == 'B':
+          CurrentCube[index] = 'Bd'
+          CurrentCube[j,k] = 'Ob'
+        elif CurrentCube[index][0] == 'W':
+          CurrentCube[index] = 'Wd'
+          CurrentCube[j,k] = 'Of'
+        elif CurrentCube[index][0] == 'G':
+          CurrentCube[index] = 'Gd'
+          CurrentCube[j,k] = 'Oh'
+        elif CurrentCube[index][0] == 'Y':
+          CurrentCube[index] = 'Yf'
+          CurrentCube[j,k] = 'Od'
 
-      #elif CurrentCube[j,k][0] == 'Y':
-        #if CurrentCube[index][0] == 'R':
-        #  CurrentCube[index] = 'Rf'
-        #  CurrentCube[j,k] = 'Yd'
-        #elif CurrentCube[index][0] == 'B':
-        #  CurrentCube[index] = 'Bb'
-        #  CurrentCube[j,k] = 'Yb'
-        #elif CurrentCube[index][0] == 'G':
-        #  CurrentCube[index] = 'Gh'
-        #  CurrentCube[j,k] = 'Yh'
-        #elif CurrentCube[index][0] == 'O':
-        #  CurrentCube[index] = 'Od'
-        #  CurrentCube[j,k] = 'Yf'
+      elif CurrentCube[j,k][0] == 'Y':
+        if CurrentCube[index][0] == 'R':
+          CurrentCube[index] = 'Rf'
+          CurrentCube[j,k] = 'Yd'
+        elif CurrentCube[index][0] == 'B':
+          CurrentCube[index] = 'Bb'
+          CurrentCube[j,k] = 'Yb'
+        elif CurrentCube[index][0] == 'G':
+          CurrentCube[index] = 'Gh'
+          CurrentCube[j,k] = 'Yh'
+        elif CurrentCube[index][0] == 'O':
+          CurrentCube[index] = 'Od'
+          CurrentCube[j,k] = 'Yf'
     count = 0
 
-current()
+  count = 0
+  for n in faceColours:
+    locations = [(""),(""),(""),("")]
+    for i in cornerCoords:
+      if CurrentCube[i][0] == n:
+        locations[count] = i
+        count += 1
+
+    for i in range(4):
+      (j,k) = locations[i]
+      if k == 3:
+        if j in (0,2,3,5,6,8):
+          if j == 0:
+            index1 = 3,0
+            index2 = 3,11
+          elif j == 2:
+            index1 = 3,2
+            index2 = 3,3
+          elif j == 3:
+            index1 = 2,3
+            index2 = 3,2
+          elif j == 5:
+            index1 = 5,2
+            index2 = 6,3
+          elif j == 6:
+            index1 = 5,2
+            index2 = 5,3
+          elif j == 8:
+            index1 = 5,0
+            index2 = 5,11
+      elif k == 0:
+        if j in (3,5):
+          if j == 3:
+            index1 = 0,3
+            index2 = 3,11
+          elif j == 5:
+            index1 = 8,3
+            index2 = 5,11
+      elif k == 11:
+        if j in (3,5):
+          if j == 3:
+            index1 = 0,3
+            index2 = 3,0
+          elif j == 5:
+            index1 = 8,3
+            index2 = 5,0
+      elif k == 5:
+        if j in (0,2,3,5,6,8):
+          if j == 0:
+            index1 = 3,8
+            index2 = 3,9
+          elif j == 2:
+            index1 = 3,5
+            index2 = 3,6
+          elif j == 3:
+            index1 = 2,5
+            index2 = 3,6
+          elif j == 5:
+            index1 = 5,6
+            index2 = 6,5
+          elif j == 6:
+            index1 = 5,5
+            index2 = 5,6
+          elif j == 8:
+            index1 = 5,8
+            index2 = 5,9
+      elif k == 8:
+        if j in (3,5):
+          if j == 3:
+            index1 = 0,5
+            index2 = 3,9
+          elif j == 5:
+            index1 = 8,5
+            index2 = 5,9
+      elif k == 9:
+        if j in (3,5):
+          if j == 3:
+            index1 = 0,5
+            index2 = 3,8
+          elif j == 5:
+            index1 = 8,5
+            index2 = 5,8
+      elif k == 2:
+        if j in (3,5):
+          if j == 3:
+            index1 = 2,3
+            index2 = 3,3
+          elif j == 5:
+            index1 = 5,3
+            index2 = 6,3
+      elif k == 6:
+        if j in (3,5):
+          if j == 3:
+            index1 = 2,5
+            index2 = 3,5
+          elif j == 5:
+            index1 = 5,5
+            index2 = 6,5
+
+      if CurrentCube[j,k][0] == 'W':
+        if CurrentCube[index1][0] == 'B':
+          if CurrentCube[index2][0] == 'O':
+            CurrentCube[j,k] = 'Wa'
+            CurrentCube[index1] = 'Bg'
+            CurrentCube[index2] = 'Oc'
+          elif CurrentCube[index2][0] == 'R':
+            print(j,k,index1,index2,CurrentCube[j,k],'WBR')
+            CurrentCube[j,k] = 'Wc'
+            CurrentCube[index1] = 'Bi'
+            CurrentCube[index2] = 'Ra'
+        elif CurrentCube[index1][0] == 'O':
+          if CurrentCube[index2][0] == 'B':
+            CurrentCube[j,k] = 'Wa'
+            CurrentCube[index1] = 'Oc'
+            CurrentCube[index2] = 'Bg'
+          elif CurrentCube[index2][0] == 'G':
+            CurrentCube[j,k] = 'Wg'
+            CurrentCube[index1] = 'Oi'
+            CurrentCube[index2] = 'Ga'
+        elif CurrentCube[index1][0] == 'R':
+          if CurrentCube[index2][0] == 'B':
+            print(j,k,index1,index2,'WRB')
+            CurrentCube[j,k] = 'Wc'
+            CurrentCube[index1] = 'Ra'
+            CurrentCube[index2] = 'Bi'
+          elif CurrentCube[index2][0] == 'G':
+            CurrentCube[j,k] = 'Wi'
+            CurrentCube[index1] = 'Rg'
+            CurrentCube[index2] = 'Gc'
+        elif CurrentCube[index1][0] == 'G':
+          if CurrentCube[index2][0] == 'O':
+            CurrentCube[j,k] = 'Wg'
+            CurrentCube[index1] = 'Ga'
+            CurrentCube[index2] = 'Oi'
+          elif CurrentCube[index2][0] == 'R':
+            CurrentCube[j,k] = 'Wi'
+            CurrentCube[index1] = 'Gc'
+            CurrentCube[index2] = 'Rg'
+        
+      elif CurrentCube[j,k][0] == 'Y':
+        if CurrentCube[index1][0] == 'B':
+          if CurrentCube[index2][0] == 'O':
+            CurrentCube[j,k] = 'Yc'
+            CurrentCube[index1] = 'Ba'
+            CurrentCube[index2] = 'Oa'
+          elif CurrentCube[index2][0] == 'R':
+            CurrentCube[j,k] = 'Ya'
+            CurrentCube[index1] = 'Bc'
+            CurrentCube[index2] = 'Rc'
+        elif CurrentCube[index1][0] == 'O':
+          if CurrentCube[index2][0] == 'B':
+            CurrentCube[j,k] = 'Yc'
+            CurrentCube[index1] = 'Oc'
+            CurrentCube[index2] = 'Ba'
+          elif CurrentCube[index2][0] == 'G':
+            CurrentCube[j,k] = 'Yi'
+            CurrentCube[index1] = 'Og'
+            CurrentCube[index2] = 'Gg'
+        elif CurrentCube[index1][0] == 'R':
+          if CurrentCube[index2][0] == 'B':
+            CurrentCube[j,k] = 'Ya'
+            CurrentCube[index1] = 'Rc'
+            CurrentCube[index2] = 'Bc'
+          elif CurrentCube[index2][0] == 'G':
+            CurrentCube[j,k] = 'Yg'
+            CurrentCube[index1] = 'Ri'
+            CurrentCube[index2] = 'Gi'
+        elif CurrentCube[index1][0] == 'G':
+          if CurrentCube[index2][0] == 'O':
+            CurrentCube[j,k] = 'Yi'
+            CurrentCube[index1] = 'Gg'
+            CurrentCube[index2] = 'Og'
+          elif CurrentCube[index2][0] == 'R':
+            CurrentCube[j,k] = 'Yg'
+            CurrentCube[index1] = 'Gi'
+            CurrentCube[index2] = 'Ri'
+
+    count = 0
+
+    CurrentCube[1,4] = CurrentCube[1,4][0]+'e'
+    CurrentCube[4,1] = CurrentCube[4,1][0]+'e'
+    CurrentCube[4,4] = CurrentCube[4,4][0]+'e'
+    CurrentCube[7,4] = CurrentCube[7,4][0]+'e'
+    CurrentCube[4,7] = CurrentCube[4,7][0]+'e'
+    CurrentCube[4,10] = CurrentCube[4,10][0]+'e'
+
+
