@@ -1121,14 +1121,13 @@ def bottomCentre():
   return piece
 
 # Find the edges of the same colour
-def locateEdges():
+def locateEdges(colour):
   listEdges = [(),(),(),()]
-  colour = bottomCentre()
+  faceColour = bottomCentre()
   for i in range(0,9):
     for j in range(0,12):
-      if CurrentCube[i,j][0] == colour[0]:
+      if CurrentCube[i,j][0] == faceColour[0]:
         if CurrentCube[i,j][1] == "b":
-          print("b",i,j)
           listEdges[0] = i,j
         elif CurrentCube[i,j][1] == "d":
           listEdges[1] = i,j
@@ -1240,9 +1239,9 @@ def checkCorners():
 
 
 # Locate the edge pieces that correspond with the corners found with findCorners
-def findEdges():
-  corners = findCorners()
-  return corners
+def findEdges(colour):
+  edges = bottomCentre()
+  return edges
 
 
 
@@ -1564,10 +1563,17 @@ coordinates = [(105,182,189,268),(105,182,270,352),(105,182,354,430),
 
 vertVals = (142, 225, 308)
 horizVals = (225, 310, 395)
-
+finishedScanning=0
 scan = input("Would you like to scan the cube? ")
 if scan.lower() == "y" or scan.lower() == "yes":
-  while True:
+  count1=0
+  count2=0
+  while finishedScanning==0:
+    if count1>5:
+      count1=0
+    if count2>2:
+      count2=0
+
 
     _, img = cap.read()
     img = cv2.flip(img,1)
@@ -1696,26 +1702,24 @@ if scan.lower() == "y" or scan.lower() == "yes":
                                         (x+w,y+h),
                                         (255,255,255), -1)
 
-    colour = ["White","Orange","Yellow","Red"]
-    colour2 = ["Blue","Red","Orange"]
-    text = "Please position the "+colour[0]+" face in the centre"
-    text2 = "of the screen, with "+colour2[0]+" on the top face"
+    cv2.rectangle(img,(185,100),(435,350),(255,255,255),2)
+
+    colour = ["White","Orange","Yellow","Red","Blue","Green"]
+    colour2 = ["Blue","Orange","Red"]
+    text = "Please position the "+colour[count1]+" face in the centre"
+    text2 = "of the screen, with "+colour2[count2]+" on the top face"
 
     img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
     img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
 
     img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
     img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-    
-    cv2.rectangle(img,(185,100),(435,350),(255,255,255),2)
     cv2.imshow("Multiple Colour Detection in Real-Time", img)
 
 
-    if cv2.waitKey(1)==32:
+    keypress = cv2.waitKey(1)
+    if keypress==32:
         screenshot = img
-        #for i in range(3):
-            #for j in range(3):
-                #cv2.rectangle(screenshot,(vertVals[i],horizVals[j]),(vertVals[i],horizVals[j]),(255,0,255),-1)
         cv2.imshow("screenshot",screenshot)
         cv2.imwrite("Screenshot.jpeg", screenshot)
         colours = cv2.imread("Screenshot.jpeg", cv2.IMREAD_UNCHANGED)
@@ -1749,32 +1753,202 @@ if scan.lower() == "y" or scan.lower() == "yes":
           for j in range(3):
             CurrentCube[i+3,j+3] = face[i,j]
 
-    if cv2.waitKey(1)==27:
+    elif keypress==27:
         break
 
-    if cv2.waitKey(1)==110:
+    elif keypress==110:
       print("\n")
       yMove()
+      count1 += 1
       print("Rotate with y then scan face")
 
-    if cv2.waitKey(1)==112:
+    elif keypress==112:
       print("\n")
       print(CurrentCube)
 
-    if cv2.waitKey(1)==116:
+    elif keypress==116:
       print("\n")
       xDash()
+      count2 = 1
+      count1 = 4
       print("Ready to scan top face")
     
-    if cv2.waitKey(1)==98:
+    elif keypress==98:
       print("\n")
-      xMove()
+      x2()
+      count2 = 2
+      count1 = 5
       print("Ready to scan bottom face")
-
-
+    
+    elif keypress==102:
+      finishedScanning=1
 
 cap.release()
-
 cv2.destroyAllWindows()
 
- 
+edgeCoords = [(0,4),(1,3),(1,5),(2,4),(3,1),(4,0),(4,2),(5,1),
+              (3,4),(4,3),(4,5),(5,4),(3,7),(4,6),(4,8),(5,7),
+              (3,10),(4,9),(4,11),(5,10),(6,4),(7,3),(7,5),(8,4)]
+
+faceColours = ['W','Y','O','R']#,'B','G']
+
+if finishedScanning==1:
+  count=0
+  for n in faceColours:
+    locations = [(""),(""),(""),("")]
+    for i in edgeCoords:
+      if CurrentCube[i][0] == n:
+        locations[count] = i
+        count += 1
+
+    for i in range(len(locations)):
+      (j,k) = locations[i]
+      if k == 4:
+        if j in (0,2,3,5,6,8):
+          if j == 0:
+            index = 8,4
+          elif j == 8:
+            index = 0,4
+          elif j == 3:
+            index = 2,4
+          elif j == 2:
+            index = 3,4
+          elif j == 5:
+            index = 6,4
+          elif j == 6:
+            index = 5,4
+      elif j == 4:
+        if k in (0,2,3,5,6,8,9,11):
+          if k == 0:
+            index = 4,11
+          elif k == 2:
+            index = 4,3
+          elif k == 3:
+            index = 4,2
+          elif k == 5:
+            index = 4,6
+          elif k == 6:
+            index = 4,5
+          elif k == 8:
+            index = 4,9
+          elif k == 9:
+            index = 4,8
+          elif k == 11:
+            index = 4,0
+      elif k == 10:
+        if j in (3,5):
+          if j == 3:
+            index = 0,4
+          elif j == 5:
+            index = 8,4
+      elif k == 5:
+        if j in (1,7):
+          if j == 1:
+            index = 3,7
+          elif j == 7:
+            index = 5,7
+      elif k == 3:
+        if j in (1,7):
+          if j == 1:
+            index = 3,1
+          elif j == 7:
+            index = 5,1
+      elif k == 1:
+        if j in (3,5):
+          if j == 3:
+            index = 1,3
+          elif j == 5:
+            index = 7,3
+      elif k == 7:
+        if j in (3,5):
+          if j == 3:
+            index = 1,5
+          elif j == 5:
+            index = 7,5
+
+      if CurrentCube[j,k][0] == 'W':
+        if CurrentCube[index][0] == 'B':
+          CurrentCube[index] = 'Bh'
+          CurrentCube[j,k] = 'Wb'
+        elif CurrentCube[index][0] == 'G':
+          CurrentCube[index] = 'Gb'
+          CurrentCube[j,k] = 'Wh'
+        elif CurrentCube[index][0] == 'O':
+          CurrentCube[index] = 'Of'
+          CurrentCube[j,k] = 'Wd'
+        elif CurrentCube[index][0] == 'R':
+          CurrentCube[index] = 'Wf'
+          CurrentCube[j,k] = 'Rd'
+
+      elif CurrentCube[j,k][0] == 'B':
+        if CurrentCube[index][0] == 'W':
+          CurrentCube[index] = 'Wb'
+          CurrentCube[j,k] = 'Bh'
+        elif CurrentCube[index][0] == 'R':
+          CurrentCube[index] = 'Rb'
+          CurrentCube[j,k] = 'Bf'
+        elif CurrentCube[index][0] == 'O':
+          CurrentCube[index] = 'Ob'
+          CurrentCube[j,k] = 'Bd'
+        elif CurrentCube[index][0] == 'Y':
+          CurrentCube[index] = 'Yb'
+          CurrentCube[j,k] = 'Bb'
+
+      elif CurrentCube[j,k][0] == 'R':
+        if CurrentCube[index][0] == 'B':
+          CurrentCube[index] = 'Rb'
+          CurrentCube[j,k] = 'Bf'
+        elif CurrentCube[index][0] == 'W':
+          CurrentCube[index] = 'Rd'
+          CurrentCube[j,k] = 'Wf'
+        elif CurrentCube[index][0] == 'G':
+          CurrentCube[index] = 'Rh'
+          CurrentCube[j,k] = 'Gf'
+        elif CurrentCube[index][0] == 'Y':
+          CurrentCube[index] = 'Yd'
+          CurrentCube[j,k] = 'Rf'
+
+      elif CurrentCube[j,k][0] == 'G':
+        if CurrentCube[index][0] == 'R':
+          CurrentCube[index] = 'Gf'
+          CurrentCube[j,k] = 'Rh'
+        elif CurrentCube[index][0] == 'Y':
+          CurrentCube[index] = 'Yh'
+          CurrentCube[j,k] = 'Gh'
+        elif CurrentCube[index][0] == 'O':
+          CurrentCube[index] = 'Oh'
+          CurrentCube[j,k] = 'Gd'
+        elif CurrentCube[index][0] == 'W':
+          CurrentCube[index] = 'Wh'
+          CurrentCube[j,k] = 'Gb'
+
+      #elif CurrentCube[j,k][0] == 'O':
+      #  if CurrentCube[index][0] == 'B':
+      #    CurrentCube[index] = 'Bd'
+      #    CurrentCube[j,k] = 'Ob'
+      #  elif CurrentCube[index][0] == 'W':
+      #    CurrentCube[index] = 'Wd'
+      #    CurrentCube[j,k] = 'Of'
+      #  elif CurrentCube[index][0] == 'G':
+      #    CurrentCube[index] = 'Gd'
+      #    CurrentCube[j,k] = 'Oh'
+      #  elif CurrentCube[index][0] == 'Y':
+      #    CurrentCube[index] = 'Yf'
+      #    CurrentCube[j,k] = 'Od'
+
+      #elif CurrentCube[j,k][0] == 'Y':
+        #if CurrentCube[index][0] == 'R':
+        #  CurrentCube[index] = 'Rf'
+        #  CurrentCube[j,k] = 'Yd'
+        #elif CurrentCube[index][0] == 'B':
+        #  CurrentCube[index] = 'Bb'
+        #  CurrentCube[j,k] = 'Yb'
+        #elif CurrentCube[index][0] == 'G':
+        #  CurrentCube[index] = 'Gh'
+        #  CurrentCube[j,k] = 'Yh'
+        #elif CurrentCube[index][0] == 'O':
+        #  CurrentCube[index] = 'Od'
+        #  CurrentCube[j,k] = 'Yf'
+    count = 0
+
+current()
