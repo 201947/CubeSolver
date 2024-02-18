@@ -1,13 +1,3 @@
-# Working:
-# U, U', U2, u, u', u2, D, D', D2, d, d', d2, R, R2,R', r, r2, r',
-# L, L2, L', l, l2, l', M, M2, M', F, F2, F', f, f2, f', B, B2, B',
-# E, E', E2, S, S', S2
-# Applying the moves randomly
-# Brute force solve bottom cross
-# Brute force to solve bottom corners without keeping edges
-# Brute force to solve the entire bottom face (THEORETICALLY)
-# Brute force to solve the entire cube (THEORETICALLY)
-
 
 import numpy as np
 import copy
@@ -15,17 +5,6 @@ import random
 import itertools
 import time
 import cv2
-
-
-Solved1= np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Bd','Be','Bf','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Bg','Bh','Bi','  ','  ','  ','  ','  ','  '],
-                   ['Oa','Ob','Oc','Wa','Wb','Wc','Ra','Rb','Rc','Ya','Yb','Yc'],
-                   ['Od','Oe','Of','Wd','We','Wf','Rd','Re','Rf','Yd','Ye','Yf'],
-                   ['Og','Oh','Oi','Wg','Wh','Wi','Rg','Rh','Ri','Yg','Yh','Yi'],
-                   ['  ','  ','  ','Ga','Gb','Gc','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Gd','Ge','Gf','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Gg','Gh','Gi','  ','  ','  ','  ','  ','  ']])
 
 
 # Start with the cube in a solved state
@@ -2163,4 +2142,19 @@ def fillWithX():
 if finishedScanning == 1:
   solveLetters()
 
+
+def TestX():
+  start = time.time()
+  for i in range(1000000):
+    restore()
+    scrambleCube()
+    fillWithX()
+    solveLetters()
+    for j in range(9):
+      for k in range(12):
+        if CurrentCube[j,k][1] == 'x':
+          current()
+  end = time.time()
+  print(end-start)
+  return
 
