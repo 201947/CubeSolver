@@ -29,15 +29,15 @@ Solved1= np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  ']
 
 
 # Start with the cube in a solved state
-Solved = np.array([['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Bx','Bx','Bx','  ','  ','  ','  ','  ','  '],
-                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
-                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
-                   ['Ox','Ox','Ox','Wx','Wx','Wx','Rx','Rx','Rx','Yx','Yx','Yx'],
-                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  '],
-                   ['  ','  ','  ','Gx','Gx','Gx','  ','  ','  ','  ','  ','  ']])
+Solved= np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
+                  ['  ','  ','  ','Bd','Be','Bf','  ','  ','  ','  ','  ','  '],
+                  ['  ','  ','  ','Bg','Bh','Bi','  ','  ','  ','  ','  ','  '],
+                  ['Oa','Ob','Oc','Wa','Wb','Wc','Ra','Rb','Rc','Ya','Yb','Yc'],
+                  ['Od','Oe','Of','Wd','We','Wf','Rd','Re','Rf','Yd','Ye','Yf'],
+                  ['Og','Oh','Oi','Wg','Wh','Wi','Rg','Rh','Ri','Yg','Yh','Yi'],
+                  ['  ','  ','  ','Ga','Gb','Gc','  ','  ','  ','  ','  ','  '],
+                  ['  ','  ','  ','Gd','Ge','Gf','  ','  ','  ','  ','  ','  '],
+                  ['  ','  ','  ','Gg','Gh','Gi','  ','  ','  ','  ','  ','  ']])
 
 # Make a copy of the array in a solved state
 CurrentCube = copy.deepcopy(Solved)
@@ -139,7 +139,7 @@ def DTurn():
   return
 
 # Rotate the bottom face
-def DBottom():
+def DDashBottom():
   tempArr=[]
   for i in range(6,9):
     tempArr.append(CurrentCube[i,3:6])
@@ -172,7 +172,7 @@ def DDashTurn():
   return
 
 # D' Bottom face rotation
-def DDashBottom():
+def DBottom():
   tempArr=[]
   for i in range(6,9):
     tempArr.append(CurrentCube[i,3:6])
@@ -1085,7 +1085,7 @@ def genList():
 # Apply the moves to the cube
 def scrambleCube():
   genList()
-  print("Scramble:",MovesToDo)
+  #print("Scramble:",MovesToDo)
   for i in range(len(MovesToDo)):
     nextfunction = MovesToDo[i]
     t = eval(nextfunction)
@@ -1807,7 +1807,7 @@ cornerCoords = [(0,3),(3,0),(3,11),(0,5),(3,8),(3,9),(2,3),(3,2),
 
 faceColours = ['W','Y','O','R','B','G']
 
-if finishedScanning==1:
+def solveLetters():
   count=0
   for n in faceColours:
     locations = [(""),(""),(""),("")]
@@ -1821,9 +1821,9 @@ if finishedScanning==1:
       if k == 4:
         if j in (0,2,3,5,6,8):
           if j == 0:
-            index = 8,4
+            index = 3,10
           elif j == 8:
-            index = 0,4
+            index = 5,10
           elif j == 3:
             index = 2,4
           elif j == 2:
@@ -2072,7 +2072,6 @@ if finishedScanning==1:
             CurrentCube[index1] = 'Bg'
             CurrentCube[index2] = 'Oc'
           elif CurrentCube[index2][0] == 'R':
-            print(j,k,index1,index2,CurrentCube[j,k],'WBR')
             CurrentCube[j,k] = 'Wc'
             CurrentCube[index1] = 'Bi'
             CurrentCube[index2] = 'Ra'
@@ -2087,7 +2086,6 @@ if finishedScanning==1:
             CurrentCube[index2] = 'Ga'
         elif CurrentCube[index1][0] == 'R':
           if CurrentCube[index2][0] == 'B':
-            print(j,k,index1,index2,'WRB')
             CurrentCube[j,k] = 'Wc'
             CurrentCube[index1] = 'Ra'
             CurrentCube[index2] = 'Bi'
@@ -2118,7 +2116,7 @@ if finishedScanning==1:
         elif CurrentCube[index1][0] == 'O':
           if CurrentCube[index2][0] == 'B':
             CurrentCube[j,k] = 'Yc'
-            CurrentCube[index1] = 'Oc'
+            CurrentCube[index1] = 'Oa'
             CurrentCube[index2] = 'Ba'
           elif CurrentCube[index2][0] == 'G':
             CurrentCube[j,k] = 'Yi'
@@ -2151,5 +2149,18 @@ if finishedScanning==1:
     CurrentCube[7,4] = CurrentCube[7,4][0]+'e'
     CurrentCube[4,7] = CurrentCube[4,7][0]+'e'
     CurrentCube[4,10] = CurrentCube[4,10][0]+'e'
+
+  return
+
+def fillWithX():
+  for i in range(9):
+    for j in range(12):
+      if CurrentCube[i,j] != '  ':
+        CurrentCube[i,j] = CurrentCube[i,j][0]+'x'
+  return
+
+
+if finishedScanning == 1:
+  solveLetters()
 
 
