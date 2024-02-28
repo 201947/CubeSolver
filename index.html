@@ -3,30 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEA Project Videos</title>
+    <title>Video and Photo Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px 0;
-        }
-        h1 {
-            margin: 0;
-        }
-        section {
             padding: 20px;
         }
-        footer {
+
+        header {
             background-color: #333;
-            color: #fff;
-            padding: 10px 0;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        video, img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
             position: fixed;
             bottom: 0;
             width: 100%;
@@ -34,14 +55,31 @@
     </style>
 </head>
 <body>
+    <header>
+        <h1>Video and Photo Gallery</h1>
+    </header>
+    
+    <main>
+        <section id="videos">
+            <h2>Videos</h2>
+            <!-- Example video - Replace with your own -->
+            <video width="320" height="240" controls>
+                <source src="example_video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <!-- Add more video elements as needed -->
+        </section>
 
-<header>
-    <h1>NEA Videos</h1></h1>
-</header>
-<a href="https://github.com/201947/CubeSolver">Link to main GitHub page</a>
-<footer>
-    <p>&copy;</p>
-</footer>
+        <section id="photos">
+            <h2>Photos</h2>
+            <!-- Example photo - Replace with your own -->
+            <img src="example_photo.jpg" alt="Example Photo">
+            <!-- Add more img elements as needed -->
+        </section>
+    </main>
 
+    <footer>
+        <p>&copy; 2024 Your Website</p>
+    </footer>
 </body>
 </html>
