@@ -85,14 +85,47 @@
         nav a:hover {
             background-color: #555;
         }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 120px;
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <header>
+        <h1>Home Page</h1>
         <nav>
-            <h1>Home Page</h1>
-            <a href="index.html" text-align:left>Home</a>
-            <a href="about.html" text-align:left>Gallery</a>
+            <a href="index.html">Home</a>
+            <div class="dropdown">
+                <a href="#">Gallery</a>
+                <div class="dropdown-content">
+                    <a href="about.html">All Photos and Videos</a>
+                </div>
+            </div>
         </nav>
     </header>
     
