@@ -102,10 +102,15 @@
         .dropdown:hover .dropdown-content {
           display: block;
         }
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%
+        }
     </style>
 </head>
 <body>
-    <header>
+    <div class="header" id="myHeader">
         <div class="navbar">
             <div class="dropdown" style="float:right">
             <button class="dropbtn">Navigation
@@ -120,7 +125,7 @@
             <a href="#videos" style="float:right">Videos</a>
             <a href="#photos" style="float:right">Photos</a>
         </div>
-    </header>
+    </div>
     
     <main>
         <section id="videos">
@@ -214,8 +219,20 @@
             <img src="https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg" alt="pepe" width="240" height="160">
             <img src="https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg" alt="pepe" width="240" height="160">
         </section>
-
     </main>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+        var header = document.getElementById("myHeader");
+        var sticky = header.offsetTop;
+        function myFunction() {
+            if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+    </script>
 
 </body>
 </html>
