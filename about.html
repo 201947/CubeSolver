@@ -44,89 +44,39 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        a:link {
-            color: green;
-            background-color: transparent;
-            text-decoration: none;
-            text-align: left;
-        }
-        
-        a:visited {
-            color: pink;
-            background-color: transparent;
-            text-decoration: none;
-            text-align: left;
-        }
-        
-        a:hover {
-            color: red;
-            background-color: transparent;
-            text-decoration: underline;
-            text-align: left;
-        }
-        
-        a:active {
-            color: yellow;
-            background-color: transparent;
-            text-decoration: underline;
-            text-align: left;
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-        }
-
-        nav a:hover {
-            background-color: #555;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #333;
-            min-width: 120px;
-            z-index: 1;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a {
-            color: white;
-            padding: 10px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #555;
-        }
+        <div class="navbar">
+          <a href="#home">Home</a>
+          <a href="#news">News</a>
+            <div class="dropdown">
+                <button class="dropbtn">Dropdown 
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="#">Link 1</a>
+                  <a href="#">Link 2</a>
+                  <a href="#">Link 3</a>
+                </div>
+            </div> 
+        </div>
     </style>
 </head>
 <body>
     <header>
         <h1>Home Page</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <div class="dropdown">
-                <a href="#">Gallery</a>
-                <div class="dropdown-content">
-                    <a href="about.html">All Photos and Videos</a>
-                </div>
-            </div>
-        </nav>
+        <div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news">News</a>
+  <div class="dropdown">
+    <button class="dropbtn">Dropdown 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+  </div> 
+</div>
     </header>
     
     <main>
