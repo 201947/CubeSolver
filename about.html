@@ -12,21 +12,30 @@
             padding: 20px;
         }
 
-        header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            width: 100%;
-            z-index: 1000;
-            transition: top 0.3s;
+        .header {
+            padding: 10px 16px;
+            background: #555;
+            color: #f1f1f1;
         }
 
         .sticky {
             position: fixed;
             top: 0;
             width: 100%;
-            animation: slideDown 0.5s;
+        }
+
+        .sticky + .content {
+            padding-top: 102px;
+        }
+
+        .top-container {
+            background-color: #f1f1f1;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 16px;
         }
 
         main {
@@ -125,6 +134,10 @@
     </style>
 </head>
 <body>
+    <div class="top-container">
+        <h1>Scroll Down</h1>
+        <p>Scroll down to see the sticky effect.</p>
+    </div>    
     <div class="header" id="myHeader">
         <div class="navbar">
             <div class="dropdown" style="float:right">
@@ -185,16 +198,15 @@
 
     <script>
         window.onscroll = function() {myFunction()};
+        
         var header = document.getElementById("myHeader");
-        var main = document.querySelector("main");
         var sticky = header.offsetTop;
+
         function myFunction() {
             if (window.pageYOffset > sticky) {
                 header.classList.add("sticky");
-                main.style.paddingTop = "80px"; /* Add padding when header is sticky */
             } else {
                 header.classList.remove("sticky");
-                main.style.paddingTop = "20px"; /* Remove padding when header is not sticky */
             }
         }
     </script>
