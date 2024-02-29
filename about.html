@@ -1,14 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Business website</title>
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEA Photos and Videos</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #808080;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #293a79;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            color: #fff;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        video, img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        a:link {
+          color: green;
+          background-color: transparent;
+          text-decoration: none;
+        }
+        
+        a:visited {
+          color: pink;
+          background-color: transparent;
+          text-decoration: none;
+        }
+        
+        a:hover {
+          color: red;
+          background-color: transparent;
+          text-decoration: underline;
+        }
+        
+        a:active {
+          color: yellow;
+          background-color: transparent;
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Home Page</h1>
+    </header>
+    
+    <main>
+        <section id="videos">
+            <h2>Videos</h2>
+            <video width="240" height="160" controls>
+                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </section>
+
+        <section id="photos">
+            <h2>Photos</h2>
+            <img src="https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg" alt="pepe" width="240" height="160">
+        </section>
     <nav>
       <a href="./index.html">Home</a>
+      <a href="./about.html">Navigation</a>
     </nav>
-  </body>
+
+    </main>
+
+</body>
 </html>
