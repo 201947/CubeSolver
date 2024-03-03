@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #888;
             margin: 0;
-            padding: 0px,20px;
+            padding: 20px;
         }
 
         header {
@@ -17,15 +17,6 @@
             color: white;
             text-align: center;
             padding: 10px;
-            width: 100%;
-            z-index: 1000;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: top 0.3s;
-        }
-
-        .header-spacer {
         }
 
         main {
@@ -35,7 +26,6 @@
             background-color: #293a79;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: padding-top 0.3s;
         }
 
         h1, h2 {
@@ -46,85 +36,80 @@
             margin-bottom: 30px;
         }
 
-        .videos-container {
-            margin-top: 80px;
-            padding-top: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .video-item {
-            width: calc(33.33% - 10px);
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        video {
-            width: 100%;
+        video, img {
+            max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-
         .navbar {
-            overflow: hidden;
-            background-color: #333;
+          overflow: hidden;
+          background-color: #333;
         }
-
+        
         .navbar a {
-            float: left;
-            font-size: 16px;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
+          float: left;
+          font-size: 16px;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
         }
-
+        
         .dropdown {
             float: left;
             overflow: hidden;
         }
-
+        
         .dropdown .dropbtn {
-            font-size: 16px;
-            border: none;
-            outline: none;
-            color: white;
-            padding: 14px 16px;
-            background-color: inherit;
-            font-family: inherit;
-            margin: 0;
+          font-size: 16px;  
+          border: none;
+          outline: none;
+          color: white;
+          padding: 14px 16px;
+          background-color: inherit;
+          font-family: inherit;
+          margin: 0;
         }
-
+        
         .navbar a:hover, .dropdown:hover .dropbtn {
-            background-color: red;
+          background-color: red;
         }
-
+        
         .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
         }
-
+        
         .dropdown-content a {
-            float: none;
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
+          float: none;
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          text-align: left;
         }
-
+        
         .dropdown-content a:hover {
-            background-color: #ddd;
+          background-color: #ddd;
         }
-
+        
         .dropdown:hover .dropdown-content {
-            display: block;
+          display: block;
+        }
+        .sticky {
+            position: fixed;
+            top: 0;
+            right: 0px;
+            width: 100%;
+            z-index: 1000;
+        }
+        .main-padding {
+            padding-top: 60px; 
         }
     </style>
 </head>
@@ -155,32 +140,22 @@
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            </div>
-            <div class="video-item">
                 <video width="240" height="160" controls autoplay>
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            </div>
-            <div class="video-item">
                 <video width="240" height="160" controls autoplay>
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            </div>
-            <div class="video-item">
                 <video width="240" height="160" controls autoplay>
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            </div>
-            <div class="video-item">
                 <video width="240" height="160" controls autoplay>
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            </div>
-            <div class="video-item">
                 <video width="240" height="160" controls autoplay>
                     <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
                     Your browser does not support the video tag.
