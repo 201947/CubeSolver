@@ -1,52 +1,41 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEA Photos and Videos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-	    font-size: 28px;
             background-color: #888;
             margin: 0;
+            padding: 20px;
         }
 
-        .header {
-            padding: 30px;
-            background: #555;
-            color: #f1f1f1;
-	    text-align: center;
-        }
-
-        .sticky {
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            z-index: 1000;
             position: fixed;
             top: 0;
-            width: 100%;
+            left: 0;
+            transition: top 0.3s;
         }
 
-        .sticky + .content {
-            padding-top: 60px;
-        }
-
-        .top-container {
-            background-color: #f1f1f1;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .content {
-            padding: 16px;
+        .header-spacer {
         }
 
         main {
             max-width: 800px;
-            margin: 80px auto 20px auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #293a79;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: padding-top 0.3s;
         }
 
         h1, h2 {
@@ -57,8 +46,22 @@
             margin-bottom: 30px;
         }
 
-        video, img {
-            max-width: 100%;
+        .videos-container {
+            margin-top: 80px;
+            padding-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .video-item {
+            width: calc(33.33% - 10px);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -126,7 +129,7 @@
     </style>
 </head>
 <body>
-    <div class="header" id="myHeader">
+    <header id="myHeader">
         <div class="navbar">
             <div class="dropdown" style="float:right">
             <button class="dropbtn">Navigation
@@ -135,42 +138,54 @@
                 <div class="dropdown-content">
                     <a href="index.html">Home</a>
                     <a href="about.html">Gallery</a>
-                    <a href="https://github.com/201947/CubeSolver">GitHub Project Page</a>#
+                    <a href="https://github.com/201947/CubeSolver">GitHub Project Page</a>
                 </div>
             </div>
             <a href="#videos" style="float:right">Videos</a>
             <a href="#photos" style="float:right">Photos</a>
-            <a href="stickyHeader.html" style="float:left">stickyHeader</a>
         </div>
-    </div>
+    </header>
+
+    <div class="header-spacer"></div>
     
     <main>
-        <section id="videos">
-            <h2>Videos</h2>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video width="240" height="160" controls autoplay>
-                <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+        <section id="videos" class="videos-container">
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="video-item">
+                <video width="240" height="160" controls autoplay>
+                    <source src='https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4' type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </section>
 
         <section id="photos">
@@ -186,15 +201,16 @@
 
     <script>
         window.onscroll = function() {myFunction()};
-        
         var header = document.getElementById("myHeader");
+        var headerSpacer = document.querySelector(".header-spacer");
         var sticky = header.offsetTop;
-
         function myFunction() {
-            if (window.pageYOffset >= sticky) {
+            if (window.pageYOffset > sticky) {
                 header.classList.add("sticky");
+                headerSpacer.style.height = header.offsetHeight + "px";
             } else {
                 header.classList.remove("sticky");
+                headerSpacer.style.height = "0";
             }
         }
     </script>
