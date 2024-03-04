@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #888;
             margin: 0;
-            padding: 20px;
+            padding: 0px 20px;
         }
 
         header {
@@ -25,7 +25,6 @@
             padding: 20px;
             background-color: #293a79;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         h1, h2 {
@@ -42,99 +41,119 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
         .navbar {
-          overflow: hidden;
-          background-color: #333;
+            overflow: hidden;
+            background-color: #333;
+            width: 100%; /* Full width */
         }
-        
+
         .navbar a {
-          float: left;
-          font-size: 16px;
-          color: white;
-          text-align: center;
-          padding: 14px 16px;
-          text-decoration: none;
+            float: left;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            width: 25%; /* Equal width for all links */
+            box-sizing: border-box; /* Include padding in width */
         }
-        
+
         .dropdown {
             float: left;
-            overflow: hidden;
+            position: relative;
+            width: 25%; /* Equal width for dropdown */
         }
-        
+
         .dropdown .dropbtn {
-          font-size: 16px;  
-          border: none;
-          outline: none;
-          color: white;
-          padding: 14px 16px;
-          background-color: inherit;
-          font-family: inherit;
-          margin: 0;
+            font-size: 16px;  
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 16px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
         }
-        
+
         .navbar a:hover, .dropdown:hover .dropbtn {
-          background-color: red;
+            background-color: red;
         }
-        
+
         .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f9f9f9;
-          min-width: 160px;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            width: 100%;
         }
-        
+
         .dropdown-content a {
-          float: none;
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-          text-align: left;
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            width: 100%;
         }
-        
+
         .dropdown-content a:hover {
-          background-color: #ddd;
+            background-color: #ddd;
         }
-        
+
         .dropdown:hover .dropdown-content {
-          display: block;
+            display: block;
         }
+
         .sticky {
             position: fixed;
             top: 0;
-            right: 0px;
+            left: 0px;
             width: 100%;
             z-index: 1000;
         }
-        .main-padding {
-            padding-top: 60px;
+
+        /* Placeholder for sticky header */
+        .header-placeholder {
+            display: none;
+            height: 60px; /* Same height as the sticky header */
+        }
+
+        /* Adjust main section when header becomes fixed */
+        .main-adjust {
+            margin-top: 60px; /* Same height as the sticky header */
         }
     </style>
 </head>
 <body>
+    <!-- Placeholder for sticky header -->
+    <div class="header-placeholder"></div>
+
     <header id="myHeader">
         <div class="navbar">
-            <div class="dropdown" style="float:right">
-            <button class="dropbtn">Navigation
-                <i class="fa fa-caret-down"></i>
-            </button>
+            <div class="dropdown">
+                <button class="dropbtn">Navigation
+                    <i class="fa fa-caret-down"></i>
+                </button>
                 <div class="dropdown-content">
                     <a href="index.html">Home</a>
                     <a href="about.html">Gallery</a>
                     <a href="https://github.com/201947/CubeSolver">GitHub Project Page</a>
                 </div>
             </div>
-            <a href="#videos" style="float:right">Videos</a>
-            <a href="#photos" style="float:right">Photos</a>
+            <a href="#videos">Videos</a>
+            <a href="#photos">Photos</a>
         </div>
     </header>
 
-    <div class="header-spacer"></div>
-    
     <main>
-        <section id="videos" class="videos-container">#
+        <section id="videos" class="videos-container">
             <h2>Videos</h2>
             <div class="video-item">
                 <video width="240" height="160" controls autoplay>
@@ -178,15 +197,16 @@
     <script>
         window.onscroll = function() {myFunction()};
         var header = document.getElementById("myHeader");
-        var headerSpacer = document.querySelector(".header-spacer");
+        var headerPlaceholder = document.querySelector(".header-placeholder");
         var sticky = header.offsetTop;
+
         function myFunction() {
             if (window.pageYOffset > sticky) {
                 header.classList.add("sticky");
-                headerSpacer.style.height = header.offsetHeight + "px";
+                headerPlaceholder.style.display = "block";
             } else {
                 header.classList.remove("sticky");
-                headerSpacer.style.height = "0";
+                headerPlaceholder.style.display = "none";
             }
         }
     </script>
