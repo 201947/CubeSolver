@@ -8,7 +8,7 @@ import cv2
 
 
 # Start with the cube in a solved state
-Solved= np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
+Solved = np.array([['  ','  ','  ','Ba','Bb','Bc','  ','  ','  ','  ','  ','  '],
                   ['  ','  ','  ','Bd','Be','Bf','  ','  ','  ','  ','  ','  '],
                   ['  ','  ','  ','Bg','Bh','Bi','  ','  ','  ','  ','  ','  '],
                   ['Oa','Ob','Oc','Wa','Wb','Wc','Ra','Rb','Rc','Ya','Yb','Yc'],
@@ -47,7 +47,6 @@ def U():
   UTurn()
   URotateTop()
   return
-
 
 
 # U2
@@ -1002,7 +1001,7 @@ def z2():
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(1,10)
+  N = random.randint(1,4)
   return N
 
 # Make an empty list N items long to fill with the moves
@@ -1064,7 +1063,7 @@ def genList():
 # Apply the moves to the cube
 def scrambleCube():
   genList()
-  #print("Scramble:",MovesToDo)
+  print("Scramble:",MovesToDo)
   for i in range(len(MovesToDo)):
     nextfunction = MovesToDo[i]
     t = eval(nextfunction)
@@ -1157,7 +1156,7 @@ def bottomEdges():
   print("Time taken:",(end-start),"seconds. ")
   return
 
-  
+
 def checkEdges():
   colour = bottomCentre()
   if CurrentCube[6,4][0] == colour[0] and CurrentCube[6,4][1] == "b" and CurrentCube[8,4][0] == colour[0] and CurrentCube[8,4][1] == "h" and CurrentCube[7,3][0] == colour[0] and CurrentCube[7,3][1] == "d" and CurrentCube[7,5][0] == colour[0] and CurrentCube[7,5][1] == "f":
@@ -1380,12 +1379,15 @@ def bruteForce():
             for i in range(len(list1)):
               t = eval(list1[i])
               t()
+              moveCount += 1
             if checkColour(faceList) == True:
               end = time.time()
               finalMoveSet.append(combination)
               print("Cube Solved. ")
               print("Solving combination",combination)
               print("Time taken:",(end-start),"seconds. ")
+              print(moveCount,'moves')
+              print((((end-start)/moveCount)*9.366684189248454e+34)/31536000,'years to run fully')
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
@@ -1646,6 +1648,8 @@ def solveLetters():
         elif CurrentCube[index][0] == 'O':
           CurrentCube[index] = 'Od'
           CurrentCube[j,k] = 'Yf'
+      else:
+        return False
     count = 0
 
   count = 0
@@ -1817,6 +1821,10 @@ def solveLetters():
             CurrentCube[j,k] = 'Yg'
             CurrentCube[index1] = 'Gi'
             CurrentCube[index2] = 'Ri'
+        elif CurrentCube[j,k][0] == 'B' or CurrentCube[j,k][0] == 'O' or CurrentCube[j,k][0] == 'G' or CurrentCube[j,k][0] == 'R':
+          continue
+        else:
+          return False
 
     count = 0
 
@@ -1827,7 +1835,7 @@ def solveLetters():
   CurrentCube[4,7] = CurrentCube[4,7][0]+'e'
   CurrentCube[4,10] = CurrentCube[4,10][0]+'e'
 
-  return
+  return True
 
 
 def fillWithX():
@@ -1838,23 +1846,23 @@ def fillWithX():
   return
 
 
-red_Lower = np.array([169,124,60])
+red_Lower = np.array([159,45,135])
 red_upper = np.array([180,255,255])
 
-yellow_lower = np.array([26,49,53])
-yellow_upper = np.array([58,255,101])
+yellow_lower = np.array([16,53,173])
+yellow_upper = np.array([40,135,255])
 
-blue_lower = np.array([93,173,71])
-blue_upper = np.array([138,255,199])
+blue_lower = np.array([71,120,128])
+blue_upper = np.array([135,255,255])
 
-green_lower = np.array([53,38,161])
-green_upper = np.array([103,94,255])
+green_lower = np.array([45,15,124])
+green_upper = np.array([74,169,255])
 
-orange_lower = np.array([3,86,79])
-orange_upper = np.array([8,255,255])
+orange_lower = np.array([0,60,135])
+orange_upper = np.array([16,143,255])
 
-white_lower = np.array([98,109,0])
-white_upper = np.array([135,191,150])
+white_lower = np.array([0,120,0])
+white_upper = np.array([180,169,255])
 
 #  whole frame = img[100:345,190:430]
 coordinates = [(105,182,189,268),(105,182,270,352),(105,182,354,430),
@@ -2148,5 +2156,24 @@ def Test():
   print(end-start)
   return
 
-current()
+
+def testAllMoves():
+  count = 0
+  for i in MovesList:
+    restore()
+    fillWithX()
+    eval(i)()
+    if not solveLetters():
+      print(False,i)
+    else:
+      print(True,i)
+      count += 1
+  print(count)
+  return
+
+#restore()
+#scrambleTest()
+#bruteForce()
+
+#input('Press enter to close. ')
 
