@@ -1387,7 +1387,7 @@ def bruteForce():
               print("Solving combination",combination)
               print("Time taken:",(end-start),"seconds. ")
               print(moveCount,'moves')
-              print((((end-start)/moveCount)*9.366684189248454e+34)/31536000,'years to run fully')
+              print((((end-start)/moveCount)*9.366684189248454e+34)/31536000,'years to run in worst case scenario')
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
@@ -2028,12 +2028,37 @@ if scan.lower() == "y" or scan.lower() == "yes":
       colour2 = ["Blue","Orange","Red"]
       text = "Please position the "+colour[count1]+" face in the centre"
       text2 = "of the screen, with "+colour2[count2]+" on the top face"
+      inst = "Controls:"
+      inst1a = "Space - Take screenshot"
+      inst2a = "n - Next face"
+      inst3a = "t - Top face"
+      inst4a = "b - Bottom face"
+      inst5a = "f - Finish scanning"
 
       img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-
       img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
       img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+
+      img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
+      img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+      img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
+      
       cv2.imshow("Multiple Colour Detection in Real-Time", img)
 
 
