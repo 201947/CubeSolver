@@ -1002,7 +1002,7 @@ def z2():
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(1,3)
+  N = random.randint(2,3)
   return N
 
 # Make an empty list N items long to fill with the moves
@@ -1015,7 +1015,7 @@ def makeEmptyList():
 def genMoves():
   makeEmptyList()
   for i in range(len(MovesToDo)):
-    MovesToDo[i] = random.randint(0,43)
+    MovesToDo[i] = random.randint(0,41)
   return
 
 # Convert the numbers generated to the corresponding functions
@@ -1146,7 +1146,7 @@ def bottomEdges():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1187,7 +1187,7 @@ def corners():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1258,7 +1258,7 @@ def bottomFace():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1292,7 +1292,7 @@ def BruteF2L():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1325,7 +1325,7 @@ def BruteOLL():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1357,7 +1357,7 @@ def BrutePLL():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            if any(list1[i][0] == list1[i+1][0] for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1382,15 +1382,17 @@ def bruteForce():
   global CurrentCube
   Stashed = copy.deepcopy(CurrentCube)
   moveCount = 0
+  comCount = 0
   start = time.time()
   if checkColour(faceList) == False:
     k = 0
-    while k < 10:
+    while k <= 20:
       for n in range(1,k):
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            if any(list1[i] == list1[i+1] for i in range(len(list1)-1)):
+            comCount += 1
+            if any(list1[i][0].lower() == list1[i+1][0].lower() for i in range(len(list1)-1)):
                 continue
             for i in range(len(list1)):
               t = eval(list1[i])
@@ -1399,16 +1401,17 @@ def bruteForce():
             if checkColour(faceList) == True:
               end = time.time()
               finalMoveSet.append(combination)
-              #print("Cube Solved. ")
-              #print("Solving combination",combination)
-              #print("Time taken:",(end-start),"seconds. ")
-              #print(moveCount,'moves')
+              print("Cube Solved. ")
+              print("Solving combination",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              print(moveCount,'moves')
+              print(comCount,'combinations')
               print((((end-start)/moveCount)*14454520644168104447138647932710521)/31536000,'years to run in worst case scenario')
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
   end = time.time()
-  print("Cube is already solved. ")
+  print("Cube already solved. ")
   print("Time taken:",(end-start),"seconds. ")
   return
 
