@@ -1406,7 +1406,7 @@ def bruteForce():
               print("Time taken:",(end-start),"seconds. ")
               print(moveCount,'moves')
               print(comCount,'combinations')
-              print((((end-start)/moveCount)*14454520644168104447138647932710521)/31536000,'years to run in worst case scenario')
+              print((((end-start)/moveCount)*318579024287754816688664801)/31536000,'years to run in worst case scenario')
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
