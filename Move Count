@@ -52,3 +52,37 @@ def avg():
     print(avg)
     return
 
+#################################################################################
+#################################################################################
+
+# Upper bound:
+# 51*(48**(n-1))
+
+# Lower buond:
+# 51*(45**(n-1))
+
+from scipy.stats import binom       # scipy
+import matplotlib.pyplot as plt     # matplotlib
+
+def pmf(r, n, p):
+    return binom.pmf(r, n, p)
+
+tot = 0
+n = 4
+
+for r in range(1,n+1):
+    print(r-1,"\t",(((48)**(r-1))*((45)**(n-r)))*pmf(r-1,n,21/51))
+    tot += 51*(((48)**(r-1))*((45)**(n-r)))*pmf(r-1,n,21/51)
+    plt.plot(tot,r,'o')
+
+plt.show()
+print(tot)
+
+boundAvg = 0.5*((51*(48**(n-1)))+(51*(45**(n-1))))
+print("Bound average:",boundAvg)
+
+
+expected = [51, 2358, 109134, 5050512]
+expected += (["N/A"]*(n-4))
+print("Expected:",expected[n-1])
+
