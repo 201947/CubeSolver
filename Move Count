@@ -1,0 +1,54 @@
+import itertools
+import time
+
+MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
+             "D2", "d", "dDash", "d2", "R", "R2", "RDash", "r", "r2",
+             "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
+             "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
+             "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2",
+             "xMove", "x2", "xDash", "yMove", "y2", "yDash", "z", "z2", "zDash"]
+
+
+#Upper bound:
+#51(48^(n-1))
+
+#Lower bound
+#51(45^(n-1))
+
+
+combs, rem_combs, combs_tried = ([[],[],[],[],[],[],[]] for i in range(3))
+
+total_combinations = 0
+removed_combs = 0
+times = []
+
+
+def runProduct(a,b):
+    start = time.time()
+
+    for k in range(a,b):
+        total_combinations = 0
+        removed_combs = 0
+        for combination in itertools.product(MovesList, repeat=k):
+            total_combinations += 1
+            if any(combination[i][0].lower() == combination[i + 1][0].lower() for i in range(len(combination) - 1)):
+                removed_combs += 1
+                continue
+        combs[k-1] = total_combinations
+        rem_combs[k-1] = removed_combs
+        combs_tried[k-1] = total_combinations-removed_combs
+
+    end = time.time()
+    
+    times.append(end-start)
+    
+    return
+
+def avg():
+    total = 0
+    for i in range(len(times)):
+        total += times[i]
+    avg = total/len(times)
+    print(avg)
+    return
+
