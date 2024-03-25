@@ -5,7 +5,6 @@ import random
 import itertools
 import time
 import cv2
-from math import comb
 
 
 # Start with the cube in a solved state
@@ -1002,7 +1001,7 @@ def z2():
 
 # Generate how many moves to apply
 def numMoves():
-  N = random.randint(2,3)
+  N = random.randint(4,5)
   return N
 
 # Make an empty list N items long to fill with the moves
@@ -1107,6 +1106,7 @@ def convMoves():
         if k == MovesList[j]:
           temp.append(MovesListForUser[j])
     finalMoveSet[i] = temp
+  print(finalMoveSet)
   return
 
 
@@ -1198,6 +1198,7 @@ def corners():
               print("Bottom corners finished. ")
               print("Solving combination:",combination)
               print("Time taken:",(end-start),"seconds. ")
+              print("Moves so far:",finalMoveSet)
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
@@ -1264,12 +1265,13 @@ def bottomFace():
               t = eval(list1[i])
               t()
             if checkCorners() == True and checkEdges() == True:
-                end = time.time()
-                finalMoveSet.append(combination)
-                print("Bottom face finished. ")
-                print("Solving combination:",combination)
-                print("Time taken:",(end-start),"seconds. ")
-                return
+              end = time.time()
+              finalMoveSet.append(combination)
+              print("Bottom face finished. ")
+              print("Solving combination:",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              print("Moves so far:",finalMoveSet)
+              return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
   end = time.time()
@@ -1298,12 +1300,13 @@ def BruteF2L():
               t = eval(list1[i])
               t()
             if F2LCheck(F2LFaceList) == True and checkCorners() == True and checkEdges() == True:
-                end = time.time()
-                finalMoveSet.append(combination)
-                print("F2L finished. ")
-                print("Solving combination:",combination)
-                print("Time taken:",(end-start),"seconds. ")
-                return
+              end = time.time()
+              finalMoveSet.append(combination)
+              print("F2L finished. ")
+              print("Solving combination:",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              print("Moves so far:",finalMoveSet)
+              return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
   end = time.time()
@@ -1331,12 +1334,13 @@ def BruteOLL():
               t = eval(list1[i])
               t()
             if F2LCheck(F2LFaceList) == True and checkFace(bottom) == True and checkFace(top) == True:
-                end = time.time()
-                finalMoveSet.append(combination)
-                print("OLL finished. ")
-                print("Solving combination:",combination)
-                print("Time taken:",(end-start),"seconds. ")
-                return
+              end = time.time()
+              finalMoveSet.append(combination)
+              print("OLL finished. ")
+              print("Solving combination:",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              print("Moves so far:",finalMoveSet)
+              return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
   end = time.time()
@@ -1363,12 +1367,13 @@ def BrutePLL():
               t = eval(list1[i])
               t()
             if checkColour(faceList) == True:
-                end = time.time()
-                finalMoveSet.append(combination)
-                print("PLL finished. ")
-                print("Solving combination:",combination)
-                print("Time taken:",(end-start),"seconds. ")
-                return
+              end = time.time()
+              finalMoveSet.append(combination)
+              print("PLL finished. ")
+              print("Solving combination:",combination)
+              print("Time taken:",(end-start),"seconds. ")
+              print("Moves so far:",finalMoveSet)
+              return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
   end = time.time()
@@ -1391,9 +1396,9 @@ def bruteForce():
         combinations = itertools.product(MovesList, repeat=n)
         for combination in combinations:
             list1 = combination
-            comCount += 1
             if any(list1[i][0].lower() == list1[i+1][0].lower() for i in range(len(list1)-1)):
                 continue
+            comCount += 1
             for i in range(len(list1)):
               t = eval(list1[i])
               t()
@@ -1406,7 +1411,8 @@ def bruteForce():
               print("Time taken:",(end-start),"seconds. ")
               print(moveCount,'moves')
               print(comCount,'combinations')
-              print((((end-start)/moveCount)*318579024287754816688664801)/31536000,'years to run in worst case scenario')
+              print("Moves so far:",finalMoveSet)
+              #print((((end-start)/moveCount)*318579024287754816688664801)/31536000,'years to run in worst case scenario')
               return
             CurrentCube = copy.deepcopy(Stashed)
       k = k + 1
@@ -1914,274 +1920,283 @@ cornerCoords = [(0,3),(3,0),(3,11),(0,5),(3,8),(3,9),(2,3),(3,2),
 
 faceColours = ['W','Y','O','R']#,'B','G']
 
-cap = cv2.VideoCapture(0)
+def scan():
+  cap = cv2.VideoCapture(0)
 
 
-finishedScanning=0
-completelyFinished = False
-scan = input("Would you like to scan the cube? ")
-if scan.lower() == "y" or scan.lower() == "yes":
-  count1=0
-  count2=0
-  done = False
-  faceCount = 0
-  solveProperly = False
-  while completelyFinished == False:
-    while finishedScanning==0:
-      if count1>5:
-        count1=0
-      if count2>2:
-        count2=0
+  finishedScanning=0
+  completelyFinished = False
+  scan = input("Would you like to scan the cube? ")
+  if scan.lower() == "y" or scan.lower() == "yes":
+    count1=0
+    count2=0
+    done = False
+    faceCount = 0
+    solveProperly = False
+    while completelyFinished == False:
+      while finishedScanning==0:
+        if count1>5:
+          count1=0
+        if count2>2:
+          count2=0
 
 
-      _, img = cap.read()
-      img = cv2.flip(img,1)
+        _, img = cap.read()
+        img = cv2.flip(img,1)
 
-      for i in range(len(coordinates)):
-          frame = img[coordinates[i][0]:coordinates[i][1],coordinates[i][2]:coordinates[i][3]]
+        for i in range(len(coordinates)):
+            frame = img[coordinates[i][0]:coordinates[i][1],coordinates[i][2]:coordinates[i][3]]
 
-          hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-          hls = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            hls = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
 
-          w_mask = cv2.inRange(hls,white_lower,white_upper)
-          b_mask = cv2.inRange(hsv,blue_lower,blue_upper)
-          r_mask = cv2.inRange(hsv,red_Lower,red_upper)
-          y_mask = cv2.inRange(hls,yellow_lower,yellow_upper)
-          g_mask = cv2.inRange(hls,green_lower,green_upper)
-          o_mask = cv2.inRange(hls,orange_lower,orange_upper)
+            w_mask = cv2.inRange(hls,white_lower,white_upper)
+            b_mask = cv2.inRange(hsv,blue_lower,blue_upper)
+            r_mask = cv2.inRange(hsv,red_Lower,red_upper)
+            y_mask = cv2.inRange(hls,yellow_lower,yellow_upper)
+            g_mask = cv2.inRange(hls,green_lower,green_upper)
+            o_mask = cv2.inRange(hls,orange_lower,orange_upper)
 
-          kernel = np.ones((5, 5), "uint8")
+            kernel = np.ones((5, 5), "uint8")
 
-          r_mask = cv2.dilate(r_mask, kernel)
-          g_mask = cv2.dilate(g_mask, kernel)
-          b_mask = cv2.dilate(b_mask, kernel)
-          y_mask = cv2.dilate(y_mask, kernel)
-          o_mask = cv2.dilate(o_mask, kernel)
-          w_mask = cv2.dilate(w_mask, kernel)
+            r_mask = cv2.dilate(r_mask, kernel)
+            g_mask = cv2.dilate(g_mask, kernel)
+            b_mask = cv2.dilate(b_mask, kernel)
+            y_mask = cv2.dilate(y_mask, kernel)
+            o_mask = cv2.dilate(o_mask, kernel)
+            w_mask = cv2.dilate(w_mask, kernel)
 
-          counter = 0
+            counter = 0
 
-          # Red
-          contours, hierarchy = cv2.findContours(r_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
+            # Red
+            contours, hierarchy = cv2.findContours(r_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
 
-          for pic, contour in enumerate(contours):
-              area = cv2.contourArea(contour)
-              if(area > 4000):
-                  counter += 1
-                  x, y, w, h = cv2.boundingRect(contour)
-                  frame = cv2.rectangle(frame, (x, y),
-                                          (x + w, y + h),
-                                          (0, 0, 255), -1)
+            for pic, contour in enumerate(contours):
+                area = cv2.contourArea(contour)
+                if(area > 4000):
+                    counter += 1
+                    x, y, w, h = cv2.boundingRect(contour)
+                    frame = cv2.rectangle(frame, (x, y),
+                                            (x + w, y + h),
+                                            (0, 0, 255), -1)
 
-          # Green
-          contours, hierarchy = cv2.findContours(g_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
+            # Green
+            contours, hierarchy = cv2.findContours(g_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
 
-          for pic, contour in enumerate(contours):
-              area = cv2.contourArea(contour)
-              if(area > 4000):
-                  counter += 1
-                  x, y, w, h = cv2.boundingRect(contour)
-                  frame = cv2.rectangle(frame, (x, y),
-                                          (x + w, y + h),
-                                          (0, 255, 0), -1)
+            for pic, contour in enumerate(contours):
+                area = cv2.contourArea(contour)
+                if(area > 4000):
+                    counter += 1
+                    x, y, w, h = cv2.boundingRect(contour)
+                    frame = cv2.rectangle(frame, (x, y),
+                                            (x + w, y + h),
+                                            (0, 255, 0), -1)
 
-          # Blue
-          contours, hierarchy = cv2.findContours(b_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
-          for pic, contour in enumerate(contours):
-              area = cv2.contourArea(contour)
-              if(area > 4000):
-                  counter += 1
-                  x, y, w, h = cv2.boundingRect(contour)
-                  frame = cv2.rectangle(frame, (x, y),
-                                          (x + w, y + h),
-                                          (255, 0, 0), -1)
+            # Blue
+            contours, hierarchy = cv2.findContours(b_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
+            for pic, contour in enumerate(contours):
+                area = cv2.contourArea(contour)
+                if(area > 4000):
+                    counter += 1
+                    x, y, w, h = cv2.boundingRect(contour)
+                    frame = cv2.rectangle(frame, (x, y),
+                                            (x + w, y + h),
+                                            (255, 0, 0), -1)
 
-          # Yellow
-          contours, hierarchy = cv2.findContours(y_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
-          for pic, contour in enumerate(contours):
-                  area = cv2.contourArea(contour)
-                  if area > 4000:
-                      counter += 1
-                      x,y,w,h = cv2.boundingRect(contour)
-                      frame = cv2.rectangle(frame, (x,y),
-                                          (x+w,y+h),
-                                          (0,255,255), -1)
+            # Yellow
+            contours, hierarchy = cv2.findContours(y_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
+            for pic, contour in enumerate(contours):
+                    area = cv2.contourArea(contour)
+                    if area > 4000:
+                        counter += 1
+                        x,y,w,h = cv2.boundingRect(contour)
+                        frame = cv2.rectangle(frame, (x,y),
+                                            (x+w,y+h),
+                                            (0,255,255), -1)
 
-          # Orange
-          contours, hierarchy = cv2.findContours(o_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
-          for pic, contour in enumerate(contours):
-                  area = cv2.contourArea(contour)
-                  if area > 4000:
-                      counter += 1
-                      x,y,w,h = cv2.boundingRect(contour)
-                      frame = cv2.rectangle(frame, (x,y),
-                                          (x+w,y+h),
-                                          (0,127,255), -1)
+            # Orange
+            contours, hierarchy = cv2.findContours(o_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
+            for pic, contour in enumerate(contours):
+                    area = cv2.contourArea(contour)
+                    if area > 4000:
+                        counter += 1
+                        x,y,w,h = cv2.boundingRect(contour)
+                        frame = cv2.rectangle(frame, (x,y),
+                                            (x+w,y+h),
+                                            (0,127,255), -1)
 
-          # White
-          contours, hierarchy = cv2.findContours(w_mask,
-                                              cv2.RETR_TREE,
-                                              cv2.CHAIN_APPROX_SIMPLE)
-          for pic, contour in enumerate(contours):
-                  area = cv2.contourArea(contour)
-                  if area > 4000:
-                      counter += 1
-                      x,y,w,h = cv2.boundingRect(contour)
-                      frame = cv2.rectangle(frame, (x,y),
-                                          (x+w,y+h),
-                                          (255,255,255), -1)
+            # White
+            contours, hierarchy = cv2.findContours(w_mask,
+                                                cv2.RETR_TREE,
+                                                cv2.CHAIN_APPROX_SIMPLE)
+            for pic, contour in enumerate(contours):
+                    area = cv2.contourArea(contour)
+                    if area > 4000:
+                        counter += 1
+                        x,y,w,h = cv2.boundingRect(contour)
+                        frame = cv2.rectangle(frame, (x,y),
+                                            (x+w,y+h),
+                                            (255,255,255), -1)
 
-      cv2.rectangle(img,(185,100),(435,350),(255,255,255),2)
+        cv2.rectangle(img,(185,100),(435,350),(255,255,255),2)
 
-      colour = ["White","Orange","Yellow","Red","Blue","Green"]
-      colour2 = ["Blue","Orange","Red"]
-      text = "Please position the "+colour[count1]+" face in the centre"
-      text2 = "of the screen, with "+colour2[count2]+" on the top face"
-      inst = "Controls:"
-      inst1a = "Space - Take screenshot"
-      inst2a = "n - Next face"
-      inst3a = "t - Top face"
-      inst4a = "b - Bottom face"
-      inst5a = "f - Finish scanning"
+        colour = ["White","Orange","Yellow","Red","Blue","Green"]
+        colour2 = ["Blue","Orange","Red"]
+        text = "Please position the "+colour[count1]+" face in the centre"
+        text2 = "of the screen, with "+colour2[count2]+" on the top face"
+        inst = "Controls:"
+        inst1a = "Space - Take screenshot"
+        inst2a = "n - Next face"
+        inst3a = "t - Top face"
+        inst4a = "b - Bottom face"
+        inst5a = "f - Finish scanning"
+        inst6a = "Order to press keys:"
+        inst6b = "n,n,n,t,b,f"
 
-      img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-
-      img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
-      img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),2)
-      
-      cv2.imshow("Multiple Colour Detection in Real-Time", img)
-
-
-      keypress = cv2.waitKey(1)
-      if keypress==32:
-          screenshot = img
-          cv2.imshow("screenshot",screenshot)
-          cv2.imwrite("Screenshot.jpeg", screenshot)
-          colours = cv2.imread("Screenshot.jpeg", cv2.IMREAD_UNCHANGED)
+        img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,text,(50,50),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
         
-          for i in range(3):
+        img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,text2,(50,75),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst,(10,345),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst1a,(10,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+
+        img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst2a,(10,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst3a,(10,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst4a,(375,385),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst5a,(375,415),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+        
+        img = cv2.putText(img,inst6a,(225,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst6a,(225,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+
+        img = cv2.putText(img,inst6b,(485,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,0),8)
+        img = cv2.putText(img,inst6b,(485,445),cv2.FONT_HERSHEY_COMPLEX,0.7,(178,163,255),1)
+
+        cv2.imshow("Multiple Colour Detection in Real-Time", img)
+
+        keypress = cv2.waitKey(1)
+        if keypress==32:
+            screenshot = img
+            cv2.imshow("screenshot",screenshot)
+            cv2.imwrite("Screenshot.jpeg", screenshot)
+            colours = cv2.imread("Screenshot.jpeg", cv2.IMREAD_UNCHANGED)
+          
+            for i in range(3):
+                for j in range(3):
+                    pixel = colours[vertVals[i],horizVals[j]]
+                    if pixel[0] < 10:
+                        if pixel[1] < 10:
+                            if pixel[2] > 245:
+                                face[i,j] = "Rx"
+                        elif pixel[1] > 117 and pixel[1] < 137:
+                            if pixel[2] > 245:
+                                face[i,j] = "Ox"
+                        elif pixel[1] > 245:
+                            if pixel[2] < 10:
+                                face[i,j] = "Gx"
+                            elif pixel[2] > 245:
+                                face[i,j] = "Yx"
+                    elif pixel[0] > 245:
+                        if pixel[1] < 10:
+                            if pixel[2] < 10:
+                                face[i,j] = "Bx"
+                        elif pixel[1] > 245:
+                            if pixel[2] > 245:
+                                face[i,j] = "Wx"
+                    else:
+                        face[i,j] = "██"
+            face = np.flip(face,1)
+            for i in range(3):
               for j in range(3):
-                  pixel = colours[vertVals[i],horizVals[j]]
-                  if pixel[0] < 10:
-                      if pixel[1] < 10:
-                          if pixel[2] > 245:
-                              face[i,j] = "Rx"
-                      elif pixel[1] > 117 and pixel[1] < 137:
-                          if pixel[2] > 245:
-                              face[i,j] = "Ox"
-                      elif pixel[1] > 245:
-                          if pixel[2] < 10:
-                              face[i,j] = "Gx"
-                          elif pixel[2] > 245:
-                              face[i,j] = "Yx"
-                  elif pixel[0] > 245:
-                      if pixel[1] < 10:
-                          if pixel[2] < 10:
-                              face[i,j] = "Bx"
-                      elif pixel[1] > 245:
-                          if pixel[2] > 245:
-                              face[i,j] = "Wx"
-                  else:
-                      face[i,j] = "██"
-          face = np.flip(face,1)
-          for i in range(3):
-            for j in range(3):
-              CurrentCube[i+3,j+3] = face[i,j]
+                CurrentCube[i+3,j+3] = face[i,j]
 
-      elif keypress==27:
-        done = True
-        completelyFinished = True
-        break
-
-      elif keypress==110:
-        print("\n")
-        yDash()
-        if count1 < 3:
-          count1 += 1
-        else:
-          count1 = 0
-        print("Rotate with y then scan face")
-
-      elif keypress==112:
-        print("\n")
-        print(CurrentCube)
-
-      elif keypress==116:
-        print("\n")
-        xDash()
-        count2 = 1
-        count1 = 4
-        print("Ready to scan top face")
-      
-      elif keypress==98:
-        print("\n")
-        x2()
-        count2 = 2
-        count1 = 5
-        print("Ready to scan bottom face")
-      
-      elif keypress==102:
-        finishedScanning=1
-        solveProperly = True
-      
-      elif keypress==114:
-        finishedScanning=1
-
-    if done == False:
-      print("Solving letters")
-      solveLetters()
-      found_x = False
-      if solveProperly == False:
-        CurrentCube[5,4] = 'Wx'
-      for i in range(9):
-          for j in range(12):
-              if CurrentCube[i, j][1] == 'x':
-                  print('Problem at index',i,str(j)+'.','Piece is:',CurrentCube[i, j])
-                  found_x = True
-                  retry = input("There was a problem. One or more pieces were not in the correct place/didn't scan correctly. Would you like to scan again? ")
-                  if retry.lower() == 'y' or retry.lower() == 'yes':
-                      finishedScanning = 0
-                      break
-                  elif retry.lower() == 'n' or retry.lower() == 'no' or retry == '':
-                    completelyFinished=1
-          if found_x == True:
-              break
-          elif finishedScanning == 0:
-            break
-      if found_x == False:
+        elif keypress==27:
+          done = True
+          completelyFinished = True
           break
 
-cap.release()
-cv2.destroyAllWindows()
+        elif keypress==110:
+          print("\n")
+          yDash()
+          if count1 < 3:
+            count1 += 1
+          else:
+            count1 = 0
+          print("Rotate with y then scan face")
+
+        elif keypress==112:
+          print("\n")
+          print(CurrentCube)
+
+        elif keypress==116:
+          print("\n")
+          xDash()
+          count2 = 1
+          count1 = 4
+          print("Ready to scan top face")
+        
+        elif keypress==98:
+          print("\n")
+          x2()
+          count2 = 2
+          count1 = 5
+          print("Ready to scan bottom face")
+        
+        elif keypress==102:
+          finishedScanning=1
+          solveProperly = True
+        
+        elif keypress==114:
+          finishedScanning=1
+
+      if done == False:
+        print("Solving letters")
+        solveLetters()
+        found_x = False
+        if solveProperly == False:
+          CurrentCube[5,4] = 'Wx'
+        for i in range(9):
+            for j in range(12):
+                if CurrentCube[i, j][1] == 'x':
+                    print('Problem at index',i,str(j)+'.','Piece is:',CurrentCube[i, j])
+                    found_x = True
+                    retry = input("There was a problem. One or more pieces were not in the correct place/didn't scan correctly. Would you like to scan again? ")
+                    if retry.lower() == 'y' or retry.lower() == 'yes':
+                        finishedScanning = 0
+                        break
+                    elif retry.lower() == 'n' or retry.lower() == 'no' or retry == '':
+                      completelyFinished=1
+            if found_x == True:
+                break
+            elif finishedScanning == 0:
+              break
+        if found_x == False:
+            break
+    current()
+  cap.release()
+  cv2.destroyAllWindows()
+  return
 
 
 def Test():
