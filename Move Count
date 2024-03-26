@@ -116,59 +116,52 @@ twelve = []
 sixteen = []
 twenty = []
 
-
-combinations = itertools.product(MovesList, repeat=2)
+combinations = itertools.product(C, repeat=2)
 for combination in combinations:
     list1 = combination
-    if list1[0].lower() == list1[1].lower():
+    if list1[0][0].lower() == list1[1][0].lower():
         continue
     two.append(combination)
-
-print(len(two))
+print("2:",len(two))
 
 combinations = itertools.product(two, repeat=2)
 for combination in combinations:
     list1 = combination
-    if list1[0][-1] == list1[1][0]:
+    if list1[0][-1][0].lower() == list1[1][0][0].lower():
        continue
     four.append(combination)
     count += 1
-
-print(len(four))
+for i in range(0,len(four),1):
+    four[i] = four[i][0] + four[i][1]
+print("4:",len(four))
 
 combinations = itertools.product(four, repeat=2)
 for combination in combinations:
     list1 = combination
-    if list1[0][-1][-1] == list1[1][0][0]:
+    if list1[0][-1][0].lower() == list1[1][0][0].lower():
         continue
     eight.append(combination)
-
-print(len(eight))
-
-combinations = itertools.product(four,eight)
-for combination in combinations:
-    list1 = combination
-    if list1[0][-1][-1][-1] == list1[1][0][0][0]:
-        continue
-    twelve.append(combination)
-
-print(len(twelve))
+for i in range(0,len(eight),1):
+    eight[i] = eight[i][0] + eight[i][1]
+print("8:",len(eight))
 
 combinations = itertools.product(eight, repeat=2)
 for combination in combinations:
     list1 = combination
-    if list1[0][-1][-1][-1][-1] == list1[1][0][0][0][0]:
+    if list1[0][-1][0].lower() == list1[1][0][0].lower():
         continue
     sixteen.append(combination)
-
-print(len(sixteen))
+for i in range(0,len(sixteen),1):
+    sixteen[i] = sixteen[i][0] + sixteen[i][1]
+print("16:",len(sixteen))
 
 combinations = itertools.product(sixteen,four)
 for combination in combinations:
     list1 = combination
-    if list1[0][-1][-1][-1][-1][-1] == list1[1][0][0][0][0][0]:
+    if list1[0][-1][0].lower() == list1[1][0][0].lower():
         continue
     twenty.append(combination)
-
-print(len(twenty))
+for i in range(0,len(twenty),1):
+    twenty[i] = twenty[i][0] + twenty[i][1]
+print("20",len(twenty))
 
