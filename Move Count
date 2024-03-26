@@ -88,3 +88,87 @@ print("Binomial estimation:",tot,"\t",str((tot/actual[n-1])*100)+str("%"))
 print("Bound average:",boundAvg,"\t",str((boundAvg/actual[n-1])*100)+str("%"))
 print("Actual:",actual[n-1])
 
+#################################################################################
+#################################################################################
+
+import itertools
+
+# 5x6 7x3
+
+A = ['a1','a2','a3','a4']
+B = ['b1','b2','b3','b4']
+
+C = ['A','B','C','D','E','F','G']
+
+MovesList = ["U", "UDash", "U2", "u", "uDash", "u2", "D", "DDash",
+             "D2", "d", "dDash", "d2", "R", "R2", "RDash", "r", "r2",
+             "rDash", "L", "L2", "LDash", "l", "l2", "lDash", "M",
+             "M2", "MDash", "F", "F2", "FDash", "f", "f2", "fDash",
+             "B", "B2", "BDash", "E", "EDash", "E2", "S", "SDash", "S2",
+             "xMove", "x2", "xDash", "yMove", "y2", "yDash", "z", "z2", "zDash"]
+
+count = 0
+
+two = []
+four = []
+eight = []
+twelve = []
+sixteen = []
+twenty = []
+
+
+combinations = itertools.product(MovesList, repeat=2)
+for combination in combinations:
+    list1 = combination
+    if list1[0].lower() == list1[1].lower():
+        continue
+    two.append(combination)
+
+print(len(two))
+
+combinations = itertools.product(two, repeat=2)
+for combination in combinations:
+    list1 = combination
+    if list1[0][-1] == list1[1][0]:
+       continue
+    four.append(combination)
+    count += 1
+
+print(len(four))
+
+combinations = itertools.product(four, repeat=2)
+for combination in combinations:
+    list1 = combination
+    if list1[0][-1][-1] == list1[1][0][0]:
+        continue
+    eight.append(combination)
+
+print(len(eight))
+
+combinations = itertools.product(four,eight)
+for combination in combinations:
+    list1 = combination
+    if list1[0][-1][-1][-1] == list1[1][0][0][0]:
+        continue
+    twelve.append(combination)
+
+print(len(twelve))
+
+combinations = itertools.product(eight, repeat=2)
+for combination in combinations:
+    list1 = combination
+    if list1[0][-1][-1][-1][-1] == list1[1][0][0][0][0]:
+        continue
+    sixteen.append(combination)
+
+print(len(sixteen))
+
+combinations = itertools.product(sixteen,four)
+for combination in combinations:
+    list1 = combination
+    if list1[0][-1][-1][-1][-1][-1] == list1[1][0][0][0][0][0]:
+        continue
+    twenty.append(combination)
+
+print(len(twenty))
+
